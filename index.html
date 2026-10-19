@@ -3,21 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Wildlife Ecology Prep Dashboard</title>
+  <title>Wildlife Ecology Master Prep (Weeks 1 - 12)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    @keyframes pulse-subtle {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.85; transform: scale(0.98); }
-    }
-    .animate-pulse-subtle { animation: pulse-subtle 2s infinite ease-in-out; }
     .perspective-1000 { perspective: 1000px; }
     .transform-style-3d { transform-style: preserve-3d; }
     .backface-hidden { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
     .rotate-y-180 { transform: rotateY(180deg); }
     .glassmorphism {
-      background: rgba(30, 41, 59, 0.7);
+      background: rgba(30, 41, 59, 0.75);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -25,7 +20,7 @@
     .glassmorphism-card {
       background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%);
       backdrop-filter: blur(16px);
-      border: 1px solid rgba(52, 211, 153, 0.18);
+      border: 1px solid rgba(52, 211, 153, 0.2);
     }
   </style>
 </head>
@@ -38,7 +33,7 @@
     <div class="absolute -bottom-40 left-1/3 w-96 h-96 bg-cyan-600/10 rounded-full blur-3xl"></div>
   </div>
 
-  <!-- Header & Live Dashboard Stats -->
+  <!-- Header -->
   <header class="glassmorphism sticky top-0 z-50 border-b border-slate-800 shadow-xl">
     <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-3">
       
@@ -54,7 +49,6 @@
           </div>
         </div>
 
-        <!-- Metric Badges (Mobile visible) -->
         <div class="flex md:hidden items-center gap-2">
           <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-[11px] font-bold text-emerald-400" id="statBadgeMobile">
             <i class="fa-solid fa-bolt mr-1"></i>0 Mastered
@@ -104,11 +98,11 @@
       <div class="flex items-center gap-3">
         <span id="trackerCurrent">Question 1 of 120</span>
         <span class="hidden sm:inline-block w-1 h-1 bg-slate-700 rounded-full"></span>
-        <span id="trackerCategory" class="hidden sm:inline text-emerald-400/90 font-mono">Week 1 • Foundations</span>
+        <span id="trackerCategory" class="hidden sm:inline text-emerald-400/90 font-mono">Week 1 Focus</span>
       </div>
       <div class="flex items-center gap-3">
         <button id="btnSoundToggle" class="hover:text-emerald-400 transition" title="Toggle audio feedback">
-          <i class="fa-solid fa-volume-high" id="soundIcon"></i>
+          <i class="fa-solid fa-volume-high text-emerald-400" id="soundIcon"></i>
         </button>
         <span class="hidden sm:inline-block w-1 h-1 bg-slate-700 rounded-full"></span>
         <span id="trackerStats" class="text-slate-300">Mastered: <strong id="masteredCount" class="text-emerald-400">0</strong> / 120</span>
@@ -138,7 +132,7 @@
         </div>
       </div>
 
-      <!-- 3D Flashcard container -->
+      <!-- 3D Flashcard Container -->
       <div class="w-full perspective-1000 cursor-pointer min-h-[400px] sm:min-h-[440px] flex group" id="flipCard">
         <div id="cardInner" class="relative w-full transform-style-3d transition-transform duration-500 rounded-3xl shadow-2xl flex">
           
@@ -173,9 +167,7 @@
             <div class="my-auto text-center px-3 py-4">
               <span class="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-2 block">Verified Answer</span>
               <h3 id="fcAnswer" class="text-xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-teal-200 to-emerald-400 mb-4 leading-snug"></h3>
-              <div id="fcExplainer" class="text-xs sm:text-sm text-slate-300 bg-slate-900/80 border border-slate-800 rounded-xl p-3 max-w-lg mx-auto leading-relaxed text-left">
-                <!-- Smart Context injected by script -->
-              </div>
+              <div id="fcExplainer" class="text-xs sm:text-sm text-slate-300 bg-slate-900/80 border border-slate-800 rounded-xl p-3 max-w-lg mx-auto leading-relaxed text-left"></div>
             </div>
 
             <div class="flex items-center justify-between text-[11px] text-slate-500 pt-3 border-t border-slate-800/80 font-medium">
@@ -187,7 +179,7 @@
         </div>
       </div>
 
-      <!-- Interactive Quick Control Bar -->
+      <!-- Quick Control Bar -->
       <div class="grid grid-cols-3 gap-2.5 w-full max-w-sm mt-5">
         <button id="btnPrev" class="py-2.5 px-3 bg-slate-800/80 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700/80 rounded-xl transition flex items-center justify-center gap-2 font-bold text-xs sm:text-sm shadow-md">
           <i class="fa-solid fa-chevron-left"></i> <span>Prev</span>
@@ -200,7 +192,7 @@
         </button>
       </div>
 
-      <!-- Keyboard Assist Bar (Desktop only) -->
+      <!-- Keyboard Assist Bar -->
       <div class="hidden sm:flex items-center gap-4 text-[11px] text-slate-500 mt-4">
         <span><kbd class="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 text-slate-400 font-mono">Space</kbd> Flip</span>
         <span><kbd class="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 text-slate-400 font-mono">←</kbd> Previous</span>
@@ -211,10 +203,10 @@
     <!-- Quiz Mode View -->
     <div id="quizView" class="hidden w-full max-w-2xl mx-auto glassmorphism-card p-5 sm:p-8 rounded-3xl border border-slate-700 shadow-2xl">
       <div class="flex justify-between items-center mb-3 text-xs font-semibold text-slate-400">
-        <span id="quizProgress" class="font-mono text-emerald-400 font-bold">Question 1 of 10</span>
+        <span id="quizProgress" class="font-mono text-emerald-400 font-bold">Question 1 of 15</span>
         <div class="flex items-center gap-2">
-          <span class="text-xs text-slate-400">Current Score:</span>
-          <span id="quizScoreText" class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-black font-mono">0</span>
+          <span class="text-xs text-slate-400">Score:</span>
+          <span id="quizScoreText" class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-black font-mono">0 / 0</span>
         </div>
       </div>
       
@@ -227,11 +219,18 @@
 
       <div id="quizOptions" class="grid grid-cols-1 gap-2.5 mb-5"></div>
 
-      <div class="flex items-center justify-between pt-4 border-t border-slate-800">
-        <div id="quizFeedback" class="text-xs sm:text-sm font-bold flex items-center gap-1.5 min-h-[1.5rem]"></div>
-        <button id="quizNextBtn" class="hidden px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-xl transition text-xs sm:text-sm ml-auto shadow-lg shadow-emerald-500/20 active:scale-95">
-          Continue <i class="fa-solid fa-arrow-right ml-1"></i>
-        </button>
+      <!-- Bottom Quiz Action Area: Feedback, Skip, and Next -->
+      <div class="flex items-center justify-between pt-4 border-t border-slate-800 gap-2">
+        <div id="quizFeedback" class="text-xs sm:text-sm font-bold flex items-center gap-1.5 min-h-[1.5rem] flex-1"></div>
+        
+        <div class="flex items-center gap-2 shrink-0">
+          <button id="quizSkipBtn" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 hover:text-white border border-slate-700 rounded-xl transition text-xs sm:text-sm font-bold flex items-center gap-1.5">
+            <i class="fa-solid fa-forward-step text-slate-400"></i> Skip
+          </button>
+          <button id="quizNextBtn" class="hidden px-5 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-xl transition text-xs sm:text-sm shadow-lg shadow-emerald-500/20 active:scale-95 flex items-center gap-1.5">
+            Continue <i class="fa-solid fa-arrow-right ml-1"></i>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -247,7 +246,6 @@
   </main>
 
   <script>
-    // Audio synthesis for dynamic interface clicks (No external audio files needed)
     const audioCtx = (window.AudioContext || window.webkitAudioContext) ? new (window.AudioContext || window.webkitAudioContext)() : null;
     let soundEnabled = true;
 
@@ -268,7 +266,6 @@
       } catch (e) {}
     }
 
-    // Toggle Sound Button
     document.getElementById('btnSoundToggle').addEventListener('click', () => {
       soundEnabled = !soundEnabled;
       const icon = document.getElementById('soundIcon');
@@ -280,7 +277,6 @@
       }
     });
 
-    // Complete Database Weeks 1 - 12 (120 Questions)
     const assignmentsData = [
       // Week 1
       { week: 1, num: 1, q: "Ecology is the scientific study of ____ that determine the distribution and abundance of organisms.", a: "interactions", opts: ["statics", "interactions", "dynamics", "habitat"], note: "Ecology specifically analyzes interactions among organisms and their biotic/abiotic environment." },
@@ -351,7 +347,7 @@
       { week: 6, num: 6, q: "Secondary succession refers to succession that occurs:", a: "After severe disturbance or removal of a pre-existing community", opts: ["On newly exposed rock or sand surfaces", "In a saline body such as a marsh", "After severe disturbance or removal of a pre-existing community", "Only when climate controls the final community"], note: "Occurs on pre-existing soil seed banks after disturbance." },
       { week: 6, num: 7, q: "Lithosere is an example of:", a: "xerosere", opts: ["hydrosere", "xerosere", "psammosere", "halosere"], note: "Succession starting on bare dry rock is a lithosere (type of xerosere)." },
       { week: 6, num: 8, q: "A transition area where two communities meet and integrate is called:", a: "Ecotone", opts: ["Habitat", "Niche", "Ecotone", "Sere"], note: "Ecotones often exhibit the 'edge effect' with elevated species richness." },
-      { week: 6, num: 9, q: "Which relationship between niches is correct?", a: "a or b (Fundamental niche >= Realised niche)", opts: ["Fundamental niche > Realised niche", "Fundamental niche = Realised niche", "Fundamental niche < Realised niche", "a or b"], note: "Competition restricts the theoretical fundamental niche to the realised niche." },
+      { week: 6, num: 9, q: "Which relationship between niches is correct?", a: "a or b", opts: ["Fundamental niche > Realised niche", "Fundamental niche = Realised niche", "Fundamental niche < Realised niche", "a or b"], note: "Fundamental niche ≥ Realised niche (either strictly greater when competition exists, or equal in its absence)." },
       { week: 6, num: 10, q: "Species richness refers to:", a: "Number of species", opts: ["Number of species", "Number of individuals of one species", "Biomass of the dominant species", "Basal area of all trees"], note: "A pure count of different species within a designated boundary." },
 
       // Week 7
@@ -373,7 +369,7 @@
       { week: 8, num: 4, q: "Breaking a natural landscape into small isolated parcels within human-dominated land is:", a: "habitat fragmentation", opts: ["habitat restoration", "habitat fragmentation", "ex-situ preservation", "seed dormancy"], note: "Leads to patch isolation and pronounced edge effects." },
       { week: 8, num: 5, q: "We prefer those areas for the creation of a conservation reserve where the level of threat is:", a: "medium", opts: ["very high", "medium", "very low", "non-existent"], note: "Medium-threat areas deliver the highest return-on-investment for protection." },
       { week: 8, num: 6, q: "A small population moving toward extinction due to Allee effects and demographic stochasticity is studied under:", a: "small population paradigm", opts: ["habitat displacement", "small population paradigm", "reserve design", "biodiversity repository"], note: "Focuses on extinction vortex dynamics in already small cohorts." },
-      { week: 7, num: 7, q: "A population shrinking due to habitat loss, competitors, and poaching is best studied under:", a: "declining population paradigm", opts: ["declining population paradigm", "small population paradigm", "island biogeography model", "cryopreservation strategy"], note: "Diagnoses extrinsic causative agents responsible for population drops." },
+      { week: 8, num: 7, q: "A population shrinking due to habitat loss, competitors, and poaching is best studied under:", a: "declining population paradigm", opts: ["declining population paradigm", "small population paradigm", "island biogeography model", "cryopreservation strategy"], note: "Diagnoses extrinsic causative agents responsible for population drops." },
       { week: 8, num: 8, q: "Which of these is a deterministic factor?", a: "death rate", opts: ["environmental variation", "forest fire", "death rate", "diseases"], note: "Average death rate is an intrinsic population demographic property." },
       { week: 8, num: 9, q: "Linear structures like roads and railways contribute to fragmentation because they act as:", a: "mortality sources and physical barriers", opts: ["mortality sources and physical barriers", "seed collection centres", "botanical repositories", "cryopreservation facilities"], note: "Roadkill mortality and avoidance behavior bisect natural ranges." },
       { week: 8, num: 10, q: "The acronym HIPPO does not include:", a: "pollination", opts: ["habitat loss", "invasive species", "pollination", "pollution"], note: "HIPPO: Habitat loss, Invasive species, Pollution, Population (human), Overharvesting." },
@@ -382,7 +378,7 @@
       { week: 9, num: 1, q: "A proposed epoch marked by significant human impact on Earth's geology and ecosystems is:", a: "Anthropocene", opts: ["Holocene", "Anthropocene", "Pleistocene", "Carboniferous"], note: "Coined by Crutzen and Stoermer to mark human domination of planetary systems." },
       { week: 9, num: 2, q: "According to the Malthusian model:", a: "Population grows in geometric progression, food supply increases in arithmetic progression", opts: ["Population grows in geometric progression, food supply increases in arithmetic progression", "Population grows in geometric progression, food supply increases in geometric progression", "Population grows in arithmetic progression, food supply increases in arithmetic progression", "Population grows in arithmetic progression, food supply increases in geometric progression"], note: "Exponential biological growth inevitably collides with linear food production." },
       { week: 9, num: 3, q: "Which of these is NOT a primary pillar of sustainability?", a: "trans-boundary sustainability", opts: ["environmental sustainability", "economic sustainability", "trans-boundary sustainability", "social sustainability"], note: "The 3 classical pillars are Environmental, Economic, and Social." },
-      { week: 9, num: 4, q: "The demographic transition sees a society move from:", a: "high birth rate, high death rate to low birth rate, low death rate", opts: ["high birth rate, low death rate to low birth rate, low death rate", "low birth rate, high death rate to low birth rate, low death rate", "high birth rate, high death rate to low birth rate, low death rate", "high birth rate, high death rate to low birth rate, high death rate"], note: "Modernization stabilizes population growth at low fertility/mortality." },
+      { week: 9, num: 4, q: "The demographic transition sees a society move from:", a: "high birth rate, high death rate to low birth rate, low death rate", opts: ["high birth rate, high death rate to low birth rate, low death rate", "low birth rate, high death rate to low birth rate, low death rate", "high birth rate, high death rate to low birth rate, low death rate", "high birth rate, high death rate to low birth rate, high death rate"], note: "Modernization stabilizes population growth at low fertility/mortality." },
       { week: 9, num: 5, q: "Which of the following is listed as a theme of clean technology?", a: "Water purification", opts: ["Water purification", "Predator-prey control", "Migration of birds", "Food chain length"], note: "Clean technologies focus on resource optimization and wastewater remediation." },
       { week: 9, num: 6, q: "When stalactites and stalagmites join together, they form a:", a: "Column", opts: ["Lagoon", "Crevice", "Terrace", "Column"], note: "Continuous precipitation of mineral calcium carbonate creates vertical pillars." },
       { week: 9, num: 7, q: "Which of these is a preventive check according to Malthus?", a: "foresight", opts: ["foresight", "vice", "misery", "flood"], note: "Preventive checks involve voluntary restraint, foresight, and birth delay." },
@@ -427,7 +423,6 @@
       { week: 12, num: 10, q: "If organisms already present in an area change the soil conditions and thereby drive further community change, the succession is:", a: "Autogenic succession", opts: ["Allogenic succession", "Autogenic succession", "Catastrophic succession", "Seasonal succession"], note: "Autogenic = biologically driven changes from within the biota." }
     ];
 
-    // Local Storage Progress Persistence
     let masteredCards = JSON.parse(localStorage.getItem('we_mastered_cards') || '[]');
 
     function saveMastered() {
@@ -442,18 +437,18 @@
       if (mobileBadge) mobileBadge.innerHTML = `<i class="fa-solid fa-bolt mr-1"></i>${count} Mastered`;
     }
 
-    // State Variables
     let currentFilteredList = [...assignmentsData];
     let currentFcIndex = 0;
     let isFlipped = false;
 
+    // Quiz State Variables
     let quizQuestions = [];
     let currentQuizIndex = 0;
     let quizScore = 0;
+    let quizSkipped = 0;
 
     const optionLetters = ['(a)', '(b)', '(c)', '(d)'];
 
-    // DOM References
     const weekFilter = document.getElementById('weekFilter');
     const btnFlashcards = document.getElementById('btnFlashcards');
     const btnQuiz = document.getElementById('btnQuiz');
@@ -477,14 +472,15 @@
     const trackerCategory = document.getElementById('trackerCategory');
     const starIcon = document.getElementById('starIcon');
 
-    // Controls
     const btnPrev = document.getElementById('btnPrev');
     const btnNext = document.getElementById('btnNext');
     const btnFlip = document.getElementById('btnFlip');
     const fcShuffle = document.getElementById('fcShuffle');
     const fcMarkMastered = document.getElementById('fcMarkMastered');
 
-    // Filter Change
+    const quizSkipBtn = document.getElementById('quizSkipBtn');
+    const quizNextBtn = document.getElementById('quizNextBtn');
+
     weekFilter.addEventListener('change', () => {
       playTone(520, 'sine', 0.05);
       const selected = weekFilter.value;
@@ -499,7 +495,6 @@
       if (!browseView.classList.contains('hidden')) renderBrowseList();
     });
 
-    // View Switching
     function setView(view) {
       playTone(480, 'sine', 0.05);
       flashcardView.classList.add('hidden');
@@ -528,7 +523,6 @@
     btnQuiz.addEventListener('click', () => setView('quiz'));
     btnBrowse.addEventListener('click', () => setView('browse'));
 
-    // Flip Card Action
     function flipCurrentCard() {
       playTone(isFlipped ? 380 : 640, 'triangle', 0.07);
       isFlipped = !isFlipped;
@@ -542,7 +536,6 @@
       flipCurrentCard();
     });
 
-    // Update Card UI
     function updateFlashcard() {
       if (currentFilteredList.length === 0) return;
       if (isFlipped) {
@@ -552,7 +545,6 @@
       const item = currentFilteredList[currentFcIndex];
       fcQuestion.textContent = item.q;
 
-      // Populate interactive options on front
       fcOptionsList.innerHTML = '';
       item.opts.forEach((opt, idx) => {
         const row = document.createElement('div');
@@ -561,7 +553,6 @@
         fcOptionsList.appendChild(row);
       });
 
-      // Find correct letter prefix
       const correctIdx = item.opts.findIndex(opt => opt.trim().toLowerCase() === item.a.trim().toLowerCase());
       const prefix = correctIdx !== -1 ? `${optionLetters[correctIdx]} ` : '';
 
@@ -575,7 +566,6 @@
       trackerCurrent.textContent = `Question ${currentFcIndex + 1} of ${currentFilteredList.length}`;
       trackerCategory.textContent = `Week ${item.week} Focus`;
 
-      // Check mastered star status
       const cardKey = `W${item.week}_Q${item.num}`;
       if (masteredCards.includes(cardKey)) {
         starIcon.className = "fa-solid fa-star text-amber-400";
@@ -584,7 +574,6 @@
       }
     }
 
-    // Toggle Mastered
     fcMarkMastered.addEventListener('click', (e) => {
       e.stopPropagation();
       const item = currentFilteredList[currentFcIndex];
@@ -625,7 +614,6 @@
       updateFlashcard();
     });
 
-    // Keyboard support
     document.addEventListener('keydown', (e) => {
       if (!flashcardView.classList.contains('hidden')) {
         if (e.code === 'Space') {
@@ -645,11 +633,12 @@
       }
     });
 
-    // Dynamic Quiz Mode Logic
+    // Quiz Mode Logic
     function startQuizMode() {
       quizQuestions = [...currentFilteredList].sort(() => Math.random() - 0.5).slice(0, 15);
       currentQuizIndex = 0;
       quizScore = 0;
+      quizSkipped = 0;
       loadQuizQuestion();
     }
 
@@ -667,19 +656,22 @@
       const optsContainer = document.getElementById('quizOptions');
       optsContainer.innerHTML = '';
       document.getElementById('quizFeedback').innerHTML = '';
-      document.getElementById('quizNextBtn').classList.add('hidden');
+      
+      quizNextBtn.classList.add('hidden');
+      quizSkipBtn.classList.remove('hidden');
 
       const shuffledOptions = [...item.opts].sort(() => Math.random() - 0.5);
       shuffledOptions.forEach(opt => {
         const btn = document.createElement('button');
         btn.className = "w-full text-left p-3.5 bg-slate-900/70 hover:bg-slate-800 border border-slate-700/80 rounded-2xl text-xs sm:text-sm transition font-medium flex items-center justify-between group active:scale-[0.99]";
         btn.innerHTML = `<span>${opt}</span> <i class="fa-regular fa-circle text-slate-600 group-hover:text-emerald-400 text-xs"></i>`;
-        btn.onclick = () => handleQuizAnswer(opt, item.a, btn, item.note);
+        btn.onclick = () => handleQuizAnswer(opt, item.a, btn);
         optsContainer.appendChild(btn);
       });
     }
 
-    function handleQuizAnswer(chosen, correct, clickedBtn, note) {
+    function handleQuizAnswer(chosen, correct, clickedBtn) {
+      quizSkipBtn.classList.add('hidden');
       const allButtons = document.getElementById('quizOptions').querySelectorAll('button');
       allButtons.forEach(b => {
         b.disabled = true;
@@ -703,10 +695,18 @@
       }
 
       document.getElementById('quizScoreText').textContent = `${quizScore} / ${currentQuizIndex + 1}`;
-      document.getElementById('quizNextBtn').classList.remove('hidden');
+      quizNextBtn.classList.remove('hidden');
     }
 
-    document.getElementById('quizNextBtn').addEventListener('click', () => {
+    // Skip question action
+    quizSkipBtn.addEventListener('click', () => {
+      playTone(350, 'sine', 0.08);
+      quizSkipped++;
+      currentQuizIndex++;
+      loadQuizQuestion();
+    });
+
+    quizNextBtn.addEventListener('click', () => {
       playTone(480, 'sine', 0.05);
       currentQuizIndex++;
       loadQuizQuestion();
@@ -714,23 +714,35 @@
 
     function showQuizResults() {
       playTone(740, 'triangle', 0.25);
-      const percentage = Math.round((quizScore / quizQuestions.length) * 100);
+      const answered = quizQuestions.length - quizSkipped;
+      const percentage = answered > 0 ? Math.round((quizScore / answered) * 100) : 0;
+      
       document.getElementById('quizProgressBar').style.width = `100%`;
-      document.getElementById('quizQuestion').innerHTML = `Quiz Complete!`;
+      document.getElementById('quizQuestion').innerHTML = `Quiz Complete! 🎉`;
       document.getElementById('quizOptions').innerHTML = `
         <div class="text-center py-6 px-4 bg-slate-900/80 rounded-2xl border border-slate-700">
-          <div class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300 mb-2">${percentage}%</div>
-          <p class="text-slate-300 font-semibold mb-1">Score: ${quizScore} out of ${quizQuestions.length}</p>
-          <p class="text-xs text-slate-500">${percentage >= 80 ? 'Mastery level achieved! Excellent retention.' : 'Keep practicing with flashcards to reinforce weaker topics.'}</p>
+          <div class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300 mb-3">${percentage}% Accuracy</div>
+          <div class="grid grid-cols-3 gap-2 max-w-sm mx-auto mb-3 text-xs sm:text-sm">
+            <div class="p-2 rounded-xl bg-emerald-950/40 border border-emerald-800/40 text-emerald-400">
+              <span class="block font-bold text-lg">${quizScore}</span> Correct
+            </div>
+            <div class="p-2 rounded-xl bg-rose-950/40 border border-rose-800/40 text-rose-400">
+              <span class="block font-bold text-lg">${answered - quizScore}</span> Wrong
+            </div>
+            <div class="p-2 rounded-xl bg-slate-800/60 border border-slate-700 text-slate-300">
+              <span class="block font-bold text-lg">${quizSkipped}</span> Skipped
+            </div>
+          </div>
+          <p class="text-xs text-slate-400">${percentage >= 80 ? 'Mastery level achieved! Excellent retention.' : 'Review weaker topics using the Flashcards mode.'}</p>
         </div>
       `;
       document.getElementById('quizFeedback').innerHTML = '';
-      const nextBtn = document.getElementById('quizNextBtn');
-      nextBtn.innerHTML = `<i class="fa-solid fa-rotate-right mr-1"></i> Retake Practice Quiz`;
-      nextBtn.classList.remove('hidden');
-      nextBtn.onclick = () => {
-        nextBtn.innerHTML = `Continue <i class="fa-solid fa-arrow-right ml-1"></i>`;
-        nextBtn.onclick = () => {
+      quizSkipBtn.classList.add('hidden');
+      quizNextBtn.innerHTML = `<i class="fa-solid fa-rotate-right mr-1"></i> Retake Practice Quiz`;
+      quizNextBtn.classList.remove('hidden');
+      quizNextBtn.onclick = () => {
+        quizNextBtn.innerHTML = `Continue <i class="fa-solid fa-arrow-right ml-1"></i>`;
+        quizNextBtn.onclick = () => {
           currentQuizIndex++;
           loadQuizQuestion();
         };
@@ -738,7 +750,7 @@
       };
     }
 
-    // Browse & Instant Search
+    // Browse and Instant Search
     function renderBrowseList() {
       const container = document.getElementById('browseList');
       const term = document.getElementById('searchInput').value.toLowerCase();
