@@ -378,7 +378,7 @@
       { week: 9, num: 1, q: "A proposed epoch marked by significant human impact on Earth's geology and ecosystems is:", a: "Anthropocene", opts: ["Holocene", "Anthropocene", "Pleistocene", "Carboniferous"], note: "Coined by Crutzen and Stoermer to mark human domination of planetary systems." },
       { week: 9, num: 2, q: "According to the Malthusian model:", a: "Population grows in geometric progression, food supply increases in arithmetic progression", opts: ["Population grows in geometric progression, food supply increases in arithmetic progression", "Population grows in geometric progression, food supply increases in geometric progression", "Population grows in arithmetic progression, food supply increases in arithmetic progression", "Population grows in arithmetic progression, food supply increases in geometric progression"], note: "Exponential biological growth inevitably collides with linear food production." },
       { week: 9, num: 3, q: "Which of these is NOT a primary pillar of sustainability?", a: "trans-boundary sustainability", opts: ["environmental sustainability", "economic sustainability", "trans-boundary sustainability", "social sustainability"], note: "The 3 classical pillars are Environmental, Economic, and Social." },
-      { week: 9, num: 4, q: "The demographic transition sees a society move from:", a: "high birth rate, high death rate to low birth rate, low death rate", opts: ["high birth rate, high death rate to low birth rate, low death rate", "low birth rate, high death rate to low birth rate, low death rate", "high birth rate, high death rate to low birth rate, low death rate", "high birth rate, high death rate to low birth rate, high death rate"], note: "Modernization stabilizes population growth at low fertility/mortality." },
+      { week: 9, num: 4, q: "The demographic transition sees a society move from:", a: "high birth rate, high death rate to low birth rate, low death rate", opts: ["high birth rate, high death rate to low birth rate, low death rate", "low birth rate, high death rate to low birth rate, low death rate", "high birth rate, low death rate to low birth rate, low death rate", "high birth rate, high death rate to low birth rate, high death rate"], note: "Modernization stabilizes population growth at low fertility/mortality." },
       { week: 9, num: 5, q: "Which of the following is listed as a theme of clean technology?", a: "Water purification", opts: ["Water purification", "Predator-prey control", "Migration of birds", "Food chain length"], note: "Clean technologies focus on resource optimization and wastewater remediation." },
       { week: 9, num: 6, q: "When stalactites and stalagmites join together, they form a:", a: "Column", opts: ["Lagoon", "Crevice", "Terrace", "Column"], note: "Continuous precipitation of mineral calcium carbonate creates vertical pillars." },
       { week: 9, num: 7, q: "Which of these is a preventive check according to Malthus?", a: "foresight", opts: ["foresight", "vice", "misery", "flood"], note: "Preventive checks involve voluntary restraint, foresight, and birth delay." },
@@ -698,7 +698,13 @@
       quizNextBtn.classList.remove('hidden');
     }
 
-    // Skip question action
+    // Advance quiz question safely
+    function handleQuizNextClick() {
+      playTone(480, 'sine', 0.05);
+      currentQuizIndex++;
+      loadQuizQuestion();
+    }
+
     quizSkipBtn.addEventListener('click', () => {
       playTone(350, 'sine', 0.08);
       quizSkipped++;
@@ -706,11 +712,7 @@
       loadQuizQuestion();
     });
 
-    quizNextBtn.addEventListener('click', () => {
-      playTone(480, 'sine', 0.05);
-      currentQuizIndex++;
-      loadQuizQuestion();
-    });
+    quizNextBtn.onclick = handleQuizNextClick;
 
     function showQuizResults() {
       playTone(740, 'triangle', 0.25);
@@ -738,14 +740,13 @@
       `;
       document.getElementById('quizFeedback').innerHTML = '';
       quizSkipBtn.classList.add('hidden');
+      
+      // Clean retake handler without index double-increments
       quizNextBtn.innerHTML = `<i class="fa-solid fa-rotate-right mr-1"></i> Retake Practice Quiz`;
       quizNextBtn.classList.remove('hidden');
       quizNextBtn.onclick = () => {
         quizNextBtn.innerHTML = `Continue <i class="fa-solid fa-arrow-right ml-1"></i>`;
-        quizNextBtn.onclick = () => {
-          currentQuizIndex++;
-          loadQuizQuestion();
-        };
+        quizNextBtn.onclick = handleQuizNextClick;
         startQuizMode();
       };
     }
