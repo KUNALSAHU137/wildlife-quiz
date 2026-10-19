@@ -3,305 +3,446 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Wildlife Ecology Master Prep (Weeks 1 - 12)</title>
+  <title>Wildlife Ecology Prep Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(0.98); }
+    }
+    .animate-pulse-subtle { animation: pulse-subtle 2s infinite ease-in-out; }
     .perspective-1000 { perspective: 1000px; }
     .transform-style-3d { transform-style: preserve-3d; }
     .backface-hidden { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
     .rotate-y-180 { transform: rotateY(180deg); }
+    .glassmorphism {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glassmorphism-card {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(52, 211, 153, 0.18);
+    }
   </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-emerald-500 selection:text-slate-900">
 
-  <!-- Header -->
-  <header class="bg-slate-800 border-b border-slate-700 shadow-md sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
-      <div class="flex items-center space-x-3 w-full sm:w-auto justify-between sm:justify-start">
-        <div class="flex items-center space-x-2">
-          <div class="p-2 bg-emerald-500 rounded-lg text-slate-900 font-bold text-lg">
-            <i class="fa-solid fa-leaf"></i>
+  <!-- Background decorative glows -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <div class="absolute -top-40 -left-40 w-96 h-96 bg-emerald-600/10 rounded-full blur-3xl"></div>
+    <div class="absolute top-1/2 -right-40 w-96 h-96 bg-teal-600/10 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-40 left-1/3 w-96 h-96 bg-cyan-600/10 rounded-full blur-3xl"></div>
+  </div>
+
+  <!-- Header & Live Dashboard Stats -->
+  <header class="glassmorphism sticky top-0 z-50 border-b border-slate-800 shadow-xl">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-3">
+      
+      <!-- Logo & Metrics -->
+      <div class="flex items-center justify-between w-full md:w-auto">
+        <div class="flex items-center space-x-3">
+          <div class="p-2.5 bg-gradient-to-tr from-emerald-500 to-teal-400 rounded-xl text-slate-950 font-black text-xl shadow-lg shadow-emerald-500/20">
+            <i class="fa-solid fa-seedling"></i>
           </div>
           <div>
-            <h1 class="text-base sm:text-lg font-bold tracking-tight text-emerald-400">Wildlife Ecology</h1>
-            <p class="text-[11px] text-slate-400">Weeks 1 – 12 (120 Qs)</p>
+            <h1 class="text-base sm:text-lg font-black tracking-tight bg-gradient-to-r from-emerald-400 to-teal-200 bg-clip-text text-transparent">Wildlife Ecology</h1>
+            <p class="text-[11px] text-slate-400 font-medium">All 120 Official Practice Questions</p>
           </div>
+        </div>
+
+        <!-- Metric Badges (Mobile visible) -->
+        <div class="flex md:hidden items-center gap-2">
+          <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-[11px] font-bold text-emerald-400" id="statBadgeMobile">
+            <i class="fa-solid fa-bolt mr-1"></i>0 Mastered
+          </span>
         </div>
       </div>
 
-      <!-- Controls -->
-      <div class="flex items-center gap-2 w-full sm:w-auto justify-between">
-        <select id="weekFilter" class="bg-slate-700 border border-slate-600 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm font-medium text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 flex-1 sm:flex-initial">
-          <option value="all">All Weeks (1-12)</option>
-          <option value="1">Week 1: Fundamentals</option>
-          <option value="2">Week 2: Biodiversity</option>
-          <option value="3">Week 3: Behavior & Interactions</option>
-          <option value="4">Week 4: Energetics & Food Chains</option>
-          <option value="5">Week 5: Population Dynamics</option>
-          <option value="6">Week 6: Community Ecology</option>
-          <option value="7">Week 7: Biogeography</option>
-          <option value="8">Week 8: Habitat Loss & HIPPO</option>
-          <option value="9">Week 9: Anthropocene</option>
-          <option value="10">Week 10: Ecotoxicology</option>
-          <option value="11">Week 11: Harvesting & MSY</option>
-          <option value="12">Week 12: Applied Ecology</option>
-        </select>
+      <!-- Controls & View Selectors -->
+      <div class="flex flex-wrap items-center justify-between w-full md:w-auto gap-2">
+        <div class="relative flex-1 sm:flex-initial">
+          <select id="weekFilter" class="w-full bg-slate-900 border border-slate-700 hover:border-emerald-500/50 rounded-xl px-3 py-1.5 text-xs sm:text-sm font-semibold text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition cursor-pointer appearance-none pr-8">
+            <option value="all">🌐 All Weeks (1 to 12)</option>
+            <option value="1">Week 1: Foundations & Pioneers</option>
+            <option value="2">Week 2: Biological Hierarchy</option>
+            <option value="3">Week 3: Behavior & Interactions</option>
+            <option value="4">Week 4: Trophic Levels & Energetics</option>
+            <option value="5">Week 5: Population Dynamics</option>
+            <option value="6">Week 6: Community Ecology</option>
+            <option value="7">Week 7: Biogeography & Dispersal</option>
+            <option value="8">Week 8: Habitat Loss & HIPPO</option>
+            <option value="9">Week 9: Anthropocene & Carbon</option>
+            <option value="10">Week 10: Disturbance & Ecotoxicology</option>
+            <option value="11">Week 11: Harvesting & Restoration</option>
+            <option value="12">Week 12: Applied & Revision</option>
+          </select>
+          <i class="fa-solid fa-chevron-down absolute right-3 top-2.5 text-xs text-slate-500 pointer-events-none"></i>
+        </div>
 
-        <div class="inline-flex rounded-lg bg-slate-700 p-1 shrink-0">
-          <button id="btnFlashcards" class="px-2.5 py-1 text-xs font-semibold rounded-md bg-emerald-500 text-slate-900 transition">Cards</button>
-          <button id="btnQuiz" class="px-2.5 py-1 text-xs font-semibold rounded-md text-slate-300 hover:text-white transition">Quiz</button>
-          <button id="btnBrowse" class="px-2.5 py-1 text-xs font-semibold rounded-md text-slate-300 hover:text-white transition">Browse</button>
+        <div class="inline-flex rounded-xl bg-slate-900/80 p-1 border border-slate-800 shrink-0 shadow-inner">
+          <button id="btnFlashcards" class="px-3 py-1 text-xs font-bold rounded-lg bg-emerald-500 text-slate-950 shadow-md transition-all flex items-center gap-1.5">
+            <i class="fa-solid fa-layer-group"></i> <span>Cards</span>
+          </button>
+          <button id="btnQuiz" class="px-3 py-1 text-xs font-semibold rounded-lg text-slate-300 hover:text-white transition-all flex items-center gap-1.5">
+            <i class="fa-solid fa-circle-question"></i> <span>Quiz</span>
+          </button>
+          <button id="btnBrowse" class="px-3 py-1 text-xs font-semibold rounded-lg text-slate-300 hover:text-white transition-all flex items-center gap-1.5">
+            <i class="fa-solid fa-list-check"></i> <span>All Q&A</span>
+          </button>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- Main Container -->
-  <main class="flex-1 max-w-4xl w-full mx-auto p-3 sm:p-6 flex flex-col justify-center">
+  <!-- Interactive Progress Strip -->
+  <div class="w-full bg-slate-900/40 border-b border-slate-800/80 py-1.5 px-4 z-10">
+    <div class="max-w-6xl mx-auto flex items-center justify-between text-[11px] font-semibold text-slate-400">
+      <div class="flex items-center gap-3">
+        <span id="trackerCurrent">Question 1 of 120</span>
+        <span class="hidden sm:inline-block w-1 h-1 bg-slate-700 rounded-full"></span>
+        <span id="trackerCategory" class="hidden sm:inline text-emerald-400/90 font-mono">Week 1 • Foundations</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <button id="btnSoundToggle" class="hover:text-emerald-400 transition" title="Toggle audio feedback">
+          <i class="fa-solid fa-volume-high" id="soundIcon"></i>
+        </button>
+        <span class="hidden sm:inline-block w-1 h-1 bg-slate-700 rounded-full"></span>
+        <span id="trackerStats" class="text-slate-300">Mastered: <strong id="masteredCount" class="text-emerald-400">0</strong> / 120</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main View Area -->
+  <main class="relative z-10 flex-1 max-w-4xl w-full mx-auto p-3 sm:p-6 flex flex-col justify-center">
 
     <!-- Flashcard Mode View -->
     <div id="flashcardView" class="w-full flex flex-col items-center">
+      
+      <!-- Top Action Bar -->
       <div class="w-full flex justify-between items-center mb-2 px-1 text-xs text-slate-400">
-        <span id="fcCardCount">Card 1 of 120</span>
-        <span id="fcTag" class="px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-emerald-400 font-medium">Week 1</span>
-        <button id="fcShuffle" class="hover:text-emerald-400 transition"><i class="fa-solid fa-shuffle mr-1"></i> Shuffle</button>
+        <div class="flex items-center gap-2">
+          <span id="fcTag" class="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold tracking-wide">Week 1</span>
+          <span id="fcProgressRatio" class="text-slate-500 font-mono">1/120</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <button id="fcShuffle" class="hover:text-emerald-400 transition flex items-center gap-1 active:scale-95">
+            <i class="fa-solid fa-shuffle"></i> <span>Shuffle</span>
+          </button>
+          <button id="fcMarkMastered" class="hover:text-amber-400 transition flex items-center gap-1 active:scale-95 text-slate-400" title="Mark as memorized">
+            <i class="fa-regular fa-star" id="starIcon"></i> <span>Star</span>
+          </button>
+        </div>
       </div>
 
-      <!-- Card Container (Self-adjusting height for mobile) -->
-      <div class="w-full perspective-1000 cursor-pointer min-h-[380px] sm:min-h-[460px] flex" id="flipCard">
-        <div id="cardInner" class="relative w-full transform-style-3d transition-transform duration-500 rounded-2xl shadow-xl flex">
+      <!-- 3D Flashcard container -->
+      <div class="w-full perspective-1000 cursor-pointer min-h-[400px] sm:min-h-[440px] flex group" id="flipCard">
+        <div id="cardInner" class="relative w-full transform-style-3d transition-transform duration-500 rounded-3xl shadow-2xl flex">
           
-          <!-- Front Side -->
-          <div class="w-full backface-hidden bg-slate-800 border-2 border-slate-700 rounded-2xl p-4 sm:p-6 flex flex-col justify-between hover:border-emerald-500/50 transition">
+          <!-- Front Face -->
+          <div class="w-full backface-hidden glassmorphism-card rounded-3xl p-5 sm:p-7 flex flex-col justify-between transition-all group-hover:border-emerald-500/40">
             <div>
-              <div class="flex items-center justify-between text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-                <span id="fcWeekText">Week 1</span>
-                <span>Question <i class="fa-regular fa-circle-question ml-1 text-emerald-400"></i></span>
+              <div class="flex items-center justify-between text-[11px] font-bold uppercase tracking-widest text-emerald-400/80 mb-3">
+                <span id="fcWeekText">Assignment Question</span>
+                <span class="flex items-center gap-1 text-slate-400">
+                  <i class="fa-solid fa-fingerprint text-emerald-400"></i> Tap card to flip
+                </span>
               </div>
-              <p id="fcQuestion" class="text-sm sm:text-base font-semibold text-slate-100 mb-3 leading-snug"></p>
+              <h2 id="fcQuestion" class="text-base sm:text-xl font-bold text-slate-100 mb-4 leading-relaxed tracking-tight"></h2>
             </div>
 
-            <!-- Options List on Front -->
-            <div id="fcOptionsList" class="grid grid-cols-1 gap-1.5 my-auto max-h-[220px] overflow-y-auto pr-1"></div>
+            <!-- Options Grid -->
+            <div id="fcOptionsList" class="grid grid-cols-1 gap-2 my-auto max-h-[220px] overflow-y-auto pr-1"></div>
 
-            <div class="text-center text-[11px] sm:text-xs text-slate-500 font-medium mt-3 pt-2 border-t border-slate-700/60">
-              <i class="fa-solid fa-rotate mr-1"></i> Tap anywhere to flip
+            <div class="flex items-center justify-between text-[11px] text-slate-500 pt-3 border-t border-slate-800/80 mt-3 font-medium">
+              <span><i class="fa-regular fa-lightbulb text-amber-400 mr-1"></i> Read options before revealing</span>
+              <span class="text-emerald-400/80 font-bold group-hover:translate-x-1 transition-transform">Reveal Answer →</span>
             </div>
           </div>
 
-          <!-- Back Side -->
-          <div class="absolute inset-0 w-full h-full backface-hidden rotate-y-180 bg-slate-800 border-2 border-emerald-500/60 rounded-2xl p-4 sm:p-6 flex flex-col justify-between">
-            <div class="flex items-center justify-between text-[11px] sm:text-xs font-bold uppercase tracking-wider text-emerald-400">
-              <span>Correct Answer</span>
-              <span><i class="fa-solid fa-circle-check text-emerald-400"></i></span>
+          <!-- Back Face -->
+          <div class="absolute inset-0 w-full h-full backface-hidden rotate-y-180 bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950/60 border-2 border-emerald-500/70 rounded-3xl p-6 sm:p-8 flex flex-col justify-between shadow-2xl shadow-emerald-950/50">
+            <div class="flex items-center justify-between text-xs font-extrabold uppercase tracking-widest text-emerald-400">
+              <span class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check"></i> Correct Solution</span>
+              <span id="fcBackWeekBadge" class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Week 1</span>
             </div>
 
-            <div class="my-auto text-center px-2 py-4">
-              <span class="text-[10px] sm:text-xs uppercase tracking-widest text-slate-400 font-semibold mb-2 block">Answer</span>
-              <h3 id="fcAnswer" class="text-lg sm:text-2xl font-bold text-emerald-400 mb-3 leading-normal"></h3>
-              <p id="fcCategory" class="text-xs text-slate-400 bg-slate-900/60 inline-block px-3 py-1 rounded-lg border border-slate-700"></p>
+            <div class="my-auto text-center px-3 py-4">
+              <span class="text-[11px] uppercase tracking-widest text-slate-400 font-bold mb-2 block">Verified Answer</span>
+              <h3 id="fcAnswer" class="text-xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-teal-200 to-emerald-400 mb-4 leading-snug"></h3>
+              <div id="fcExplainer" class="text-xs sm:text-sm text-slate-300 bg-slate-900/80 border border-slate-800 rounded-xl p-3 max-w-lg mx-auto leading-relaxed text-left">
+                <!-- Smart Context injected by script -->
+              </div>
             </div>
 
-            <div class="text-center text-[11px] sm:text-xs text-slate-500 font-medium pt-2 border-t border-slate-700/60">
-              <i class="fa-solid fa-rotate mr-1"></i> Tap to flip back
+            <div class="flex items-center justify-between text-[11px] text-slate-500 pt-3 border-t border-slate-800/80 font-medium">
+              <span><i class="fa-solid fa-rotate-left mr-1"></i> Tap to review question</span>
+              <span class="text-emerald-400">Next question available below</span>
             </div>
           </div>
 
         </div>
       </div>
 
-      <!-- Navigation Controls (Optimized touch targets) -->
-      <div class="grid grid-cols-3 gap-2 w-full max-w-sm mt-4">
-        <button id="btnPrev" class="py-2.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-200 border border-slate-700 rounded-xl transition flex items-center justify-center gap-1 font-medium text-xs sm:text-sm">
-          <i class="fa-solid fa-arrow-left"></i> Prev
+      <!-- Interactive Quick Control Bar -->
+      <div class="grid grid-cols-3 gap-2.5 w-full max-w-sm mt-5">
+        <button id="btnPrev" class="py-2.5 px-3 bg-slate-800/80 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700/80 rounded-xl transition flex items-center justify-center gap-2 font-bold text-xs sm:text-sm shadow-md">
+          <i class="fa-solid fa-chevron-left"></i> <span>Prev</span>
         </button>
-        <button id="btnFlip" class="py-2.5 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-900 font-bold rounded-xl transition shadow-md shadow-emerald-500/20 text-xs sm:text-sm">
-          Flip
+        <button id="btnFlip" class="py-2.5 px-3 bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 active:scale-95 text-slate-950 font-black rounded-xl transition shadow-lg shadow-emerald-500/25 text-xs sm:text-sm flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-rotate"></i> <span>Flip</span>
         </button>
-        <button id="btnNext" class="py-2.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-200 border border-slate-700 rounded-xl transition flex items-center justify-center gap-1 font-medium text-xs sm:text-sm">
-          Next <i class="fa-solid fa-arrow-right"></i>
+        <button id="btnNext" class="py-2.5 px-3 bg-slate-800/80 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700/80 rounded-xl transition flex items-center justify-center gap-2 font-bold text-xs sm:text-sm shadow-md">
+          <span>Next</span> <i class="fa-solid fa-chevron-right"></i>
         </button>
+      </div>
+
+      <!-- Keyboard Assist Bar (Desktop only) -->
+      <div class="hidden sm:flex items-center gap-4 text-[11px] text-slate-500 mt-4">
+        <span><kbd class="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 text-slate-400 font-mono">Space</kbd> Flip</span>
+        <span><kbd class="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 text-slate-400 font-mono">←</kbd> Previous</span>
+        <span><kbd class="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 text-slate-400 font-mono">→</kbd> Next</span>
       </div>
     </div>
 
     <!-- Quiz Mode View -->
-    <div id="quizView" class="hidden w-full max-w-2xl mx-auto bg-slate-800 p-4 sm:p-6 rounded-2xl border border-slate-700 shadow-xl">
+    <div id="quizView" class="hidden w-full max-w-2xl mx-auto glassmorphism-card p-5 sm:p-8 rounded-3xl border border-slate-700 shadow-2xl">
       <div class="flex justify-between items-center mb-3 text-xs font-semibold text-slate-400">
-        <span id="quizProgress">Question 1 of 10</span>
-        <span id="quizScoreText" class="text-emerald-400 font-bold">Score: 0 / 0</span>
+        <span id="quizProgress" class="font-mono text-emerald-400 font-bold">Question 1 of 10</span>
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-slate-400">Current Score:</span>
+          <span id="quizScoreText" class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-black font-mono">0</span>
+        </div>
       </div>
-      <div class="w-full bg-slate-700 h-1.5 rounded-full mb-4 overflow-hidden">
-        <div id="quizProgressBar" class="bg-emerald-500 h-full w-0 transition-all duration-300"></div>
+      
+      <!-- Live Progress Bar -->
+      <div class="w-full bg-slate-800/80 h-2 rounded-full mb-5 overflow-hidden p-0.5 border border-slate-700">
+        <div id="quizProgressBar" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full w-0 rounded-full transition-all duration-300"></div>
       </div>
 
-      <h2 id="quizQuestion" class="text-sm sm:text-base font-semibold mb-4 text-slate-100 min-h-[2.5rem]"></h2>
+      <h2 id="quizQuestion" class="text-base sm:text-lg font-bold mb-5 text-slate-100 min-h-[3.5rem] leading-snug"></h2>
 
-      <div id="quizOptions" class="grid grid-cols-1 gap-2 mb-4"></div>
+      <div id="quizOptions" class="grid grid-cols-1 gap-2.5 mb-5"></div>
 
-      <div class="flex justify-between items-center pt-3 border-t border-slate-700">
-        <div id="quizFeedback" class="text-xs sm:text-sm font-semibold"></div>
-        <button id="quizNextBtn" class="hidden px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold rounded-xl transition text-xs sm:text-sm ml-auto">
-          Next <i class="fa-solid fa-chevron-right ml-1"></i>
+      <div class="flex items-center justify-between pt-4 border-t border-slate-800">
+        <div id="quizFeedback" class="text-xs sm:text-sm font-bold flex items-center gap-1.5 min-h-[1.5rem]"></div>
+        <button id="quizNextBtn" class="hidden px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-xl transition text-xs sm:text-sm ml-auto shadow-lg shadow-emerald-500/20 active:scale-95">
+          Continue <i class="fa-solid fa-arrow-right ml-1"></i>
         </button>
       </div>
     </div>
 
-    <!-- All Q&A Browse View -->
+    <!-- All Q&A Search & Study Table -->
     <div id="browseView" class="hidden w-full flex flex-col gap-3">
-      <input type="text" id="searchInput" placeholder="Search questions, answers, or keywords..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2 text-xs sm:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-      <div id="browseList" class="flex flex-col gap-2.5"></div>
+      <div class="relative">
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-xs text-slate-400"></i>
+        <input type="text" id="searchInput" placeholder="Search keywords, formulas, definitions (e.g. Malthus, MSY, lithosere)..." class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-9 pr-4 py-2.5 text-xs sm:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition">
+      </div>
+      <div id="browseList" class="flex flex-col gap-2 max-h-[70vh] overflow-y-auto pr-1"></div>
     </div>
 
   </main>
 
   <script>
+    // Audio synthesis for dynamic interface clicks (No external audio files needed)
+    const audioCtx = (window.AudioContext || window.webkitAudioContext) ? new (window.AudioContext || window.webkitAudioContext)() : null;
+    let soundEnabled = true;
+
+    function playTone(freq = 440, type = 'sine', duration = 0.08) {
+      if (!soundEnabled || !audioCtx) return;
+      try {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    // Toggle Sound Button
+    document.getElementById('btnSoundToggle').addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      const icon = document.getElementById('soundIcon');
+      if (soundEnabled) {
+        icon.className = 'fa-solid fa-volume-high text-emerald-400';
+        playTone(600, 'sine', 0.1);
+      } else {
+        icon.className = 'fa-solid fa-volume-xmark text-slate-500';
+      }
+    });
+
+    // Complete Database Weeks 1 - 12 (120 Questions)
     const assignmentsData = [
       // Week 1
-      { week: 1, num: 1, q: "Ecology is the scientific study of ____ that determine the distribution and abundance of organisms.", a: "interactions", opts: ["statics", "interactions", "dynamics", "habitat"] },
-      { week: 1, num: 2, q: "Carolus Linnaeus is considered the father of:", a: "Modern taxonomy", opts: ["Biogeography", "Modern taxonomy", "Population ecology", "Botanical geography"] },
-      { week: 1, num: 3, q: "\"Enquiry into plants\" is a book written by:", a: "Theophrastus", opts: ["Theophrastus", "Linnaeus", "Malthus", "Humboldt"] },
-      { week: 1, num: 4, q: "Who amongst these is considered the father of Biogeography?", a: "Humboldt", opts: ["Theophrastus", "Linnaeus", "Malthus", "Humboldt"] },
-      { week: 1, num: 5, q: "Genetic adaptation refers to:", a: "Inheritable fitness", opts: ["High reproductive rate in one generation", "Inheritable fitness", "Physical strength of an individual", "Short-term environmental comfort"] },
-      { week: 1, num: 6, q: "Thomas Robert Malthus influenced studies in:", a: "Population ecology", opts: ["Community ecology", "Marine ecology", "Population ecology", "Behavioural ecology"] },
-      { week: 1, num: 7, q: "Which approach tests ecological ideas through experiments?", a: "Laboratory approach", opts: ["Theoretical approach", "Field approach", "Laboratory approach", "Descriptive approach"] },
-      { week: 1, num: 8, q: "Which approach mainly depends on direct observation of organisms in natural surroundings?", a: "Field approach", opts: ["Laboratory approach", "Historical approach", "Theoretical approach", "Field approach"] },
-      { week: 1, num: 9, q: "In the Greek word root of Ecology, 'logos' refers to:", a: "study", opts: ["household", "preservation", "environment", "study"] },
-      { week: 1, num: 10, q: "Charles Darwin is associated with:", a: "The theory of evolution and natural selection", opts: ["The theory of ecosystem formation", "The theory of taxonomy", "The theory of botanical geography", "The theory of evolution and natural selection"] },
+      { week: 1, num: 1, q: "Ecology is the scientific study of ____ that determine the distribution and abundance of organisms.", a: "interactions", opts: ["statics", "interactions", "dynamics", "habitat"], note: "Ecology specifically analyzes interactions among organisms and their biotic/abiotic environment." },
+      { week: 1, num: 2, q: "Carolus Linnaeus is considered the father of:", a: "Modern taxonomy", opts: ["Biogeography", "Modern taxonomy", "Population ecology", "Botanical geography"], note: "Linnaeus formalized binomial nomenclature and systematic biological classification." },
+      { week: 1, num: 3, q: "\"Enquiry into plants\" is a book written by:", a: "Theophrastus", opts: ["Theophrastus", "Linnaeus", "Malthus", "Humboldt"], note: "Theophrastus is regarded as the Father of Botany for this classical text." },
+      { week: 1, num: 4, q: "Who amongst these is considered the father of Biogeography?", a: "Humboldt", opts: ["Theophrastus", "Linnaeus", "Malthus", "Humboldt"], note: "Alexander von Humboldt pioneered geographic distribution studies of flora/fauna." },
+      { week: 1, num: 5, q: "Genetic adaptation refers to:", a: "Inheritable fitness", opts: ["High reproductive rate in one generation", "Inheritable fitness", "Physical strength of an individual", "Short-term environmental comfort"], note: "Adaptations are heritable traits that boost survival across generations." },
+      { week: 1, num: 6, q: "Thomas Robert Malthus influenced studies in:", a: "Population ecology", opts: ["Community ecology", "Marine ecology", "Population ecology", "Behavioural ecology"], note: "Malthus formulated foundational principles on population growth vs resource ceilings." },
+      { week: 1, num: 7, q: "Which approach tests ecological ideas through experiments?", a: "Laboratory approach", opts: ["Theoretical approach", "Field approach", "Laboratory approach", "Descriptive approach"], note: "Controlled laboratory setups manipulate variables directly to test causality." },
+      { week: 1, num: 8, q: "Which approach mainly depends on direct observation of organisms in natural surroundings?", a: "Field approach", opts: ["Laboratory approach", "Historical approach", "Theoretical approach", "Field approach"], note: "Field ecology documents natural phenomena in wild habitats." },
+      { week: 1, num: 9, q: "In the Greek word root of Ecology, 'logos' refers to:", a: "study", opts: ["household", "preservation", "environment", "study"], note: "Oikos = household/home, Logos = scientific study." },
+      { week: 1, num: 10, q: "Charles Darwin is associated with:", a: "The theory of evolution and natural selection", opts: ["The theory of ecosystem formation", "The theory of taxonomy", "The theory of botanical geography", "The theory of evolution and natural selection"], note: "Darwin demonstrated natural selection as the driving mechanism of evolutionary change." },
 
       // Week 2
-      { week: 2, num: 1, q: "Hierarchy emerges almost inevitably through a wide variety of evolutionary processes, for the simple reason that hierarchical structures are:", a: "stable", opts: ["perfect", "imperfect", "stable", "unstable"] },
-      { week: 2, num: 2, q: "Which level is formed when similar cells and their extracellular matrix from the same origin together perform a specific function?", a: "Tissue", opts: ["Organ", "Tissue", "Organ system", "Population"] },
-      { week: 2, num: 3, q: "\"The diversity that exists within an ecosystem\" is:", a: "alpha (α) biodiversity", opts: ["alpha (α) biodiversity", "beta (β) biodiversity", "gamma (γ) biodiversity", "delta (δ) biodiversity"] },
-      { week: 2, num: 4, q: "\"Groups of actually or potentially interbreeding natural populations, which are reproductively isolated from other such groups\" is a definition of:", a: "species", opts: ["cells", "species", "ecosystems", "biomes"] },
-      { week: 2, num: 5, q: "The emergent principle can be stated as:", a: "Whole > sum of parts", opts: ["Whole = sum of parts", "Whole < sum of parts", "Whole > sum of parts", "None of these"] },
-      { week: 2, num: 6, q: "The smallest unit of life is the:", a: "Cell", opts: ["Cell", "Tissue", "Organ", "Organism"] },
-      { week: 2, num: 7, q: "The diversity of genetic information present at the levels of phyla, families, species, populations and individuals is called:", a: "Genetic biodiversity", opts: ["Ecosystem biodiversity", "Species evenness", "Genetic biodiversity", "Species richness"] },
-      { week: 2, num: 8, q: "The value of leaving use and non-use values for future generations is called:", a: "Bequest value", opts: ["Altruistic value", "Option value", "Existence value", "Bequest value"] },
-      { week: 2, num: 9, q: "Value arising even though a resource is not being used is called:", a: "Non-use value", opts: ["Direct value", "Indirect value", "Non-use value", "Productive value"] },
-      { week: 2, num: 10, q: "Species richness refers to:", a: "The number of species present", opts: ["The distribution of individuals among different species", "The genetic variation within one population", "The number of ecosystems in a biome", "The number of species present"] },
+      { week: 2, num: 1, q: "Hierarchy emerges almost inevitably through a wide variety of evolutionary processes, for the simple reason that hierarchical structures are:", a: "stable", opts: ["perfect", "imperfect", "stable", "unstable"], note: "Hierarchies offer stability and resilience against systemic shocks." },
+      { week: 2, num: 2, q: "Which level is formed when similar cells and their extracellular matrix from the same origin together perform a specific function?", a: "Tissue", opts: ["Organ", "Tissue", "Organ system", "Population"], note: "Cells form tissues; collections of tissues form functional organs." },
+      { week: 2, num: 3, q: "\"The diversity that exists within an ecosystem\" is:", a: "alpha (α) biodiversity", opts: ["alpha (α) biodiversity", "beta (β) biodiversity", "gamma (γ) biodiversity", "delta (δ) biodiversity"], note: "Alpha = within-site/ecosystem; Beta = between habitats; Gamma = regional total." },
+      { week: 2, num: 4, q: "\"Groups of actually or potentially interbreeding natural populations, which are reproductively isolated from other such groups\" is a definition of:", a: "species", opts: ["cells", "species", "ecosystems", "biomes"], note: "Ernst Mayr's classic Biological Species Concept definition." },
+      { week: 2, num: 5, q: "The emergent principle can be stated as:", a: "Whole > sum of parts", opts: ["Whole = sum of parts", "Whole < sum of parts", "Whole > sum of parts", "None of these"], note: "Higher organizational levels exhibit novel traits not found in components alone." },
+      { week: 2, num: 6, q: "The smallest unit of life is the:", a: "Cell", opts: ["Cell", "Tissue", "Organ", "Organism"], note: "The cell is the basic structural and functional unit of all living organisms." },
+      { week: 2, num: 7, q: "The diversity of genetic information present at the levels of phyla, families, species, populations and individuals is called:", a: "Genetic biodiversity", opts: ["Ecosystem biodiversity", "Species evenness", "Genetic biodiversity", "Species richness"], note: "Refers to nucleotide, gene, and allelic variation across taxa." },
+      { week: 2, num: 8, q: "The value of leaving use and non-use values for future generations is called:", a: "Bequest value", opts: ["Altruistic value", "Option value", "Existence value", "Bequest value"], note: "Bequest value represents conservation specifically for progeny." },
+      { week: 2, num: 9, q: "Value arising even though a resource is not being used is called:", a: "Non-use value", opts: ["Direct value", "Indirect value", "Non-use value", "Productive value"], note: "Includes existence value and aesthetic non-consumptive worth." },
+      { week: 2, num: 10, q: "Species richness refers to:", a: "The number of species present", opts: ["The distribution of individuals among different species", "The genetic variation within one population", "The number of ecosystems in a biome", "The number of species present"], note: "Richness counts distinct species; evenness measures abundance distribution." },
 
       // Week 3
-      { week: 3, num: 1, q: "I observe a bird take a tick out of another bird's head and eat it. In the social context, this behaviour is:", a: "allo grooming", opts: ["tick hunting", "auto grooming", "allo grooming", "foraging"] },
-      { week: 3, num: 2, q: "Leech is an example of:", a: "ectoparasite", opts: ["endoparasite", "herbivore predator", "parasitoid", "ectoparasite"] },
-      { week: 3, num: 3, q: "An ecological interaction in which both participating organisms are harmed is called:", a: "competition", opts: ["mutualism", "commensalism", "competition", "neutralism"] },
-      { week: 3, num: 4, q: "Interspecific interaction occurs between:", a: "members of different species", opts: ["members of different species", "members of the same species", "two organisms that are both benefited", "two organisms that remain unaffected"] },
-      { week: 3, num: 5, q: "The distance maintained by nesting penguins to avoid pecking from neighbours is related to:", a: "territorial spacing", opts: ["herbivory", "parasitoid pressure", "prey switching", "territorial spacing"] },
-      { week: 3, num: 6, q: "A parasite that lives inside the body of its host is called:", a: "endoparasite", opts: ["ectoparasite", "endoparasite", "predator", "commensal"] },
-      { week: 3, num: 7, q: "Birds on giraffe are an example of:", a: "protocooperation", opts: ["colony", "commensalism", "protocooperation", "allelopathy"] },
-      { week: 3, num: 8, q: "Competition in which organisms directly consume a limited resource so that less remains for others is called:", a: "exploitative competition", opts: ["interference competition", "exploitative competition", "apparent competition", "neutral competition"] },
-      { week: 3, num: 9, q: "Interference competition is also known as:", a: "contest competition", opts: ["apparent competition", "contest competition", "niche competition", "exploitative competition"] },
-      { week: 3, num: 10, q: "The scientific study of animal behaviour is called:", a: "ethology", opts: ["behaviourism", "ecology", "ethology", "prey-predator dynamics"] },
+      { week: 3, num: 1, q: "I observe a bird take a tick out of another bird's head and eat it. In the social context, this behaviour is:", a: "allo grooming", opts: ["tick hunting", "auto grooming", "allo grooming", "foraging"], note: "Grooming another individual is allogrooming; grooming oneself is autogrooming." },
+      { week: 3, num: 2, q: "Leech is an example of:", a: "ectoparasite", opts: ["endoparasite", "herbivore predator", "parasitoid", "ectoparasite"], note: "Leeches attach externally to host body surfaces." },
+      { week: 3, num: 3, q: "An ecological interaction in which both participating organisms are harmed is called:", a: "competition", opts: ["mutualism", "commensalism", "competition", "neutralism"], note: "Competition is a (- / -) interaction due to shared scarce resource limits." },
+      { week: 3, num: 4, q: "Interspecific interaction occurs between:", a: "members of different species", opts: ["members of different species", "members of the same species", "two organisms that are both benefited", "two organisms that remain unaffected"], note: "Inter- = between different species; Intra- = within the same species." },
+      { week: 3, num: 5, q: "The distance maintained by nesting penguins to avoid pecking from neighbours is related to:", a: "territorial spacing", opts: ["herbivory", "parasitoid pressure", "prey switching", "territorial spacing"], note: "Enforces regular spatial dispersion and minimizes physical conflict." },
+      { week: 3, num: 6, q: "A parasite that lives inside the body of its host is called:", a: "endoparasite", opts: ["ectoparasite", "endoparasite", "predator", "commensal"], note: "Internal parasites (e.g. tapeworms, flukes) are endoparasites." },
+      { week: 3, num: 7, q: "Birds on giraffe are an example of:", a: "protocooperation", opts: ["colony", "commensalism", "protocooperation", "allelopathy"], note: "Both benefit (+ / +), but the relationship is facultative, not obligate." },
+      { week: 3, num: 8, q: "Competition in which organisms directly consume a limited resource so that less remains for others is called:", a: "exploitative competition", opts: ["interference competition", "exploitative competition", "apparent competition", "neutral competition"], note: "Exploitative uses up resources indirectly without physical confrontation." },
+      { week: 3, num: 9, q: "Interference competition is also known as:", a: "contest competition", opts: ["apparent competition", "contest competition", "niche competition", "exploitative competition"], note: "Contest involves direct aggressive behavior over territory or mates." },
+      { week: 3, num: 10, q: "The scientific study of animal behaviour is called:", a: "ethology", opts: ["behaviourism", "ecology", "ethology", "prey-predator dynamics"], note: "Ethology examines behavior under natural evolutionary conditions." },
 
       // Week 4
-      { week: 4, num: 1, q: "In the chain Grass → Grasshopper → Frog → Snake → Hawk, the hawk is:", a: "consumer and carnivore", opts: ["producer", "consumer and carnivore", "consumer and herbivore", "decomposer"] },
-      { week: 4, num: 2, q: "Trees → Birds → Parasites → Hyperparasites represents:", a: "inverted pyramid of numbers", opts: ["upright pyramid of numbers", "inverted pyramid of numbers", "spindle pyramid of numbers", "dumb-bell pyramid of numbers"] },
-      { week: 4, num: 3, q: "Glacial lakes are typical examples of:", a: "oligotrophic lakes", opts: ["eutrophic lakes", "hypereutrophic lakes", "oligotrophic lakes", "mesotrophic lakes"] },
-      { week: 4, num: 4, q: "In a grazing food chain, the first trophic level after producers is occupied by:", a: "Herbivores", opts: ["Carnivores", "Decomposers", "Detritivores", "Herbivores"] },
-      { week: 4, num: 5, q: "Which statement correctly defines net primary production?", a: "Gross primary production minus energy lost through respiration per unit time", opts: ["Energy intercepted by producers from the Sun", "Total energy lost during transfer between trophic levels", "Gross primary production minus energy lost through respiration per unit time", "Energy stored only in herbivore biomass"] },
-      { week: 4, num: 6, q: "Which statement correctly defines gross primary production?", a: "Energy fixed through photosynthesis per unit time", opts: ["Energy fixed through photosynthesis per unit time", "Energy lost by organisms through respiration per unit time", "Total number of producers in an ecosystem", "Organic matter consumed by herbivores per unit time"] },
-      { week: 4, num: 7, q: "Which chain best represents a detritus food chain?", a: "Fallen leaves → detritivores → small fish → large fish", opts: ["Fallen leaves → detritivores → small fish → large fish", "Grass → chital → tiger", "Rat → flea → parasitic protozoa", "Phytoplankton → zooplankton → fish → sea lion"] },
-      { week: 4, num: 8, q: "As we move up a food chain, available energy:", a: "decreases", opts: ["decreases", "increases", "remains same", "is zero everywhere"] },
-      { week: 4, num: 9, q: "Which statement correctly describes a decomposer?", a: "It converts dead material into soil and recycles nutrients", opts: ["It only feeds on living plants", "It consumes only primary consumers", "It converts dead material into soil and recycles nutrients", "It always occupies the quaternary trophic level"] },
-      { week: 4, num: 10, q: "Which description best defines a heterotroph?", a: "An organism that cannot produce its own food and depends on organic carbon from other sources", opts: ["An organism that converts sunlight directly into inorganic nutrients", "An organism that cannot produce its own food and depends on organic carbon from other sources", "An organism that uses chemical reactions to manufacture minerals", "An organism that occupies only the first trophic level"] },
+      { week: 4, num: 1, q: "In the chain Grass → Grasshopper → Frog → Snake → Hawk, the hawk is:", a: "consumer and carnivore", opts: ["producer", "consumer and carnivore", "consumer and herbivore", "decomposer"], note: "The hawk occupies the top trophic level feeding on other animals." },
+      { week: 4, num: 2, q: "Trees → Birds → Parasites → Hyperparasites represents:", a: "inverted pyramid of numbers", opts: ["upright pyramid of numbers", "inverted pyramid of numbers", "spindle pyramid of numbers", "dumb-bell pyramid of numbers"], note: "One tree supports many birds, each hosting thousands of parasites." },
+      { week: 4, num: 3, q: "Glacial lakes are typical examples of:", a: "oligotrophic lakes", opts: ["eutrophic lakes", "hypereutrophic lakes", "oligotrophic lakes", "mesotrophic lakes"], note: "Glacial lakes have low nutrient contents, high oxygen, and low primary productivity." },
+      { week: 4, num: 4, q: "In a grazing food chain, the first trophic level after producers is occupied by:", a: "Herbivores", opts: ["Carnivores", "Decomposers", "Detritivores", "Herbivores"], note: "Primary consumers (herbivores) directly eat primary producers (plants)." },
+      { week: 4, num: 5, q: "Which statement correctly defines net primary production?", a: "Gross primary production minus energy lost through respiration per unit time", opts: ["Energy intercepted by producers from the Sun", "Total energy lost during transfer between trophic levels", "Gross primary production minus energy lost through respiration per unit time", "Energy stored only in herbivore biomass"], note: "NPP = GPP - R." },
+      { week: 4, num: 6, q: "Which statement correctly defines gross primary production?", a: "Energy fixed through photosynthesis per unit time", opts: ["Energy fixed through photosynthesis per unit time", "Energy lost by organisms through respiration per unit time", "Total number of producers in an ecosystem", "Organic matter consumed by herbivores per unit time"], note: "Total carbon/chemical energy produced before respiratory losses." },
+      { week: 4, num: 7, q: "Which chain best represents a detritus food chain?", a: "Fallen leaves → detritivores → small fish → large fish", opts: ["Fallen leaves → detritivores → small fish → large fish", "Grass → chital → tiger", "Rat → flea → parasitic protozoa", "Phytoplankton → zooplankton → fish → sea lion"], note: "Detritus chains originate from non-living dead organic particulate matter." },
+      { week: 4, num: 8, q: "As we move up a food chain, available energy:", a: "decreases", opts: ["decreases", "increases", "remains same", "is zero everywhere"], note: "10% rule: about 90% of energy is lost as heat and metabolic work at each trophic transfer." },
+      { week: 4, num: 9, q: "Which statement correctly describes a decomposer?", a: "It converts dead material into soil and recycles nutrients", opts: ["It only feeds on living plants", "It consumes only primary consumers", "It converts dead material into soil and recycles nutrients", "It always occupies the quaternary trophic level"], note: "Decomposers mineralize organic nutrients back to inorganic forms." },
+      { week: 4, num: 10, q: "Which description best defines a heterotroph?", a: "An organism that cannot produce its own food and depends on organic carbon from other sources", opts: ["An organism that converts sunlight directly into inorganic nutrients", "An organism that cannot produce its own food and depends on organic carbon from other sources", "An organism that uses chemical reactions to manufacture minerals", "An organism that occupies only the first trophic level"], note: "Heterotrophs rely on organic matter produced by autotrophs." },
 
       // Week 5
-      { week: 5, num: 1, q: "In population dynamics, which pair represents additions to an existing population?", a: "Natality and immigration", opts: ["Mortality and emigration", "Natality and immigration", "Mortality and natality", "Immigration and emigration"] },
-      { week: 5, num: 2, q: "Cover board surveys are typically used for sampling:", a: "herpetofauna", opts: ["herpetofauna", "fishes", "large mammals", "carnivores"] },
-      { week: 5, num: 3, q: "Pan traps are used for sampling:", a: "pollinator insects", opts: ["bees", "butterflies", "non-pollinator insects", "pollinator insects"] },
-      { week: 5, num: 4, q: "A procedure where each possible combination of sampling units has an equal chance of being selected:", a: "Simple random sampling", opts: ["Simple random sampling", "Systematic sampling", "Stratified sampling", "Multistage sampling"] },
-      { week: 5, num: 5, q: "The minimum replacement level fertility for a population to grow should be greater than:", a: "2", opts: ["1", "2", "3", "4"] },
-      { week: 5, num: 6, q: "A list of sampling units is called a:", a: "Sampling frame", opts: ["Sample", "Sampling intensity", "Sampling frame", "Stratum"] },
-      { week: 5, num: 7, q: "In the capture-recapture method, the first stage involves:", a: "Capturing, marking and releasing animals", opts: ["Counting faecal pellets", "Removing trapped animals permanently", "Estimating bait consumption", "Capturing, marking and releasing animals"] },
-      { week: 5, num: 8, q: "The logistic growth equation, when plotted, appears:", a: "S shaped", opts: ["I shaped", "J shaped", "S shaped", "O shaped"] },
-      { week: 5, num: 9, q: "Selecting every kth unit starting from a random start number from 1 to k is:", a: "Systematic sampling", opts: ["Simple random sampling", "Systematic sampling", "Stratified sampling", "Multistage sampling"] },
-      { week: 5, num: 10, q: "Which of these is not a measure of absolute population density?", a: "pelt count", opts: ["total count", "pelt count", "capture-recapture method", "removal method"] },
+      { week: 5, num: 1, q: "In population dynamics, which pair represents additions to an existing population?", a: "Natality and immigration", opts: ["Mortality and emigration", "Natality and immigration", "Mortality and natality", "Immigration and emigration"], note: "Population additions = Births (B) + Immigration (I)." },
+      { week: 5, num: 2, q: "Cover board surveys are typically used for sampling:", a: "herpetofauna", opts: ["herpetofauna", "fishes", "large mammals", "carnivores"], note: "Amphibians and reptiles shelter under moisture-retaining artificial coverboards." },
+      { week: 5, num: 3, q: "Pan traps are used for sampling:", a: "pollinator insects", opts: ["bees", "butterflies", "non-pollinator insects", "pollinator insects"], note: "Colored pan traps filled with soapy water attract flying pollinators." },
+      { week: 5, num: 4, q: "A procedure where each possible combination of sampling units has an equal chance of being selected:", a: "Simple random sampling", opts: ["Simple random sampling", "Systematic sampling", "Stratified sampling", "Multistage sampling"], note: "Classic definition of an unbiased simple random sample (SRS)." },
+      { week: 5, num: 5, q: "The minimum replacement level fertility for a population to grow should be greater than:", a: "2", opts: ["1", "2", "3", "4"], note: "A fertility rate > 2.1 replaces both parents and compensates for infant mortality." },
+      { week: 5, num: 6, q: "A list of sampling units is called a:", a: "Sampling frame", opts: ["Sample", "Sampling intensity", "Sampling frame", "Stratum"], note: "The exhaustive operational roster from which sample entities are drawn." },
+      { week: 5, num: 7, q: "In the capture-recapture method, the first stage involves:", a: "Capturing, marking and releasing animals", opts: ["Counting faecal pellets", "Removing trapped animals permanently", "Estimating bait consumption", "Capturing, marking and releasing animals"], note: "Lincoln-Petersen index requires initial tagging and full return to the wild." },
+      { week: 5, num: 8, q: "The logistic growth equation, when plotted, appears:", a: "S shaped", opts: ["I shaped", "J shaped", "S shaped", "O shaped"], note: "Sigmoidal (S-shaped) curve due to carrying capacity (K) resistance." },
+      { week: 5, num: 9, q: "Selecting every kth unit starting from a random start number from 1 to k is:", a: "Systematic sampling", opts: ["Simple random sampling", "Systematic sampling", "Stratified sampling", "Multistage sampling"], note: "Systematic sampling evenly spaces observations throughout the population frame." },
+      { week: 5, num: 10, q: "Which of these is not a measure of absolute population density?", a: "pelt count", opts: ["total count", "pelt count", "capture-recapture method", "removal method"], note: "Pelt count is an indirect relative index of population abundance." },
 
       // Week 6
-      { week: 6, num: 1, q: "A guild is a group of species that:", a: "Utilise resources in a similar way", opts: ["Occupy only one climax community", "Have identical population size", "Utilise resources in a similar way", "Are confined to saline habitats"] },
-      { week: 6, num: 2, q: "The climax near Tindni village controlled by cattle disturbance is an example of:", a: "disclimax", opts: ["climatic climax", "edaphic climax", "disclimax", "catastrophic climax"] },
-      { week: 6, num: 3, q: "Species abundance may be expressed in terms of:", a: "Number of individuals, biomass or cover", opts: ["Climate, soil and slope", "Number of individuals, biomass or cover", "Hydrosere, xerosere and halosere", "Resistance, resilience and stability"] },
-      { week: 6, num: 4, q: "Resistance refers to the ability of a community to:", a: "Persist without change in the face of disturbance", opts: ["Recover quickly after disturbance", "Persist without change in the face of disturbance", "Increase the number of pioneer species", "Replace one seral stage with another"] },
-      { week: 6, num: 5, q: "Importance Value (IV) can be written as:", a: "Relative density + Relative frequency + Relative dominance", opts: ["Relative density + Relative frequency X Relative dominance", "Relative density X Relative frequency + Relative dominance", "Relative density + Relative frequency + Relative dominance", "Relative density X Relative frequency X Relative dominance"] },
-      { week: 6, num: 6, q: "Secondary succession refers to succession that occurs:", a: "After severe disturbance or removal of a pre-existing community", opts: ["On newly exposed rock or sand surfaces", "In a saline body such as a marsh", "After severe disturbance or removal of a pre-existing community", "Only when climate controls the final community"] },
-      { week: 6, num: 7, q: "Lithosere is an example of:", a: "xerosere", opts: ["hydrosere", "xerosere", "psammosere", "halosere"] },
-      { week: 6, num: 8, q: "A transition area where two communities meet and integrate is called:", a: "Ecotone", opts: ["Habitat", "Niche", "Ecotone", "Sere"] },
-      { week: 6, num: 9, q: "Which relationship between niches is correct?", a: "a or b (Fundamental niche >= Realised niche)", opts: ["Fundamental niche > Realised niche", "Fundamental niche = Realised niche", "Fundamental niche < Realised niche", "a or b"] },
-      { week: 6, num: 10, q: "Species richness refers to:", a: "Number of species", opts: ["Number of species", "Number of individuals of one species", "Biomass of the dominant species", "Basal area of all trees"] },
+      { week: 6, num: 1, q: "A guild is a group of species that:", a: "Utilise resources in a similar way", opts: ["Occupy only one climax community", "Have identical population size", "Utilise resources in a similar way", "Are confined to saline habitats"], note: "Guilds exploit identical resource classes regardless of taxonomic relatedness." },
+      { week: 6, num: 2, q: "The climax near Tindni village controlled by cattle disturbance is an example of:", a: "disclimax", opts: ["climatic climax", "edaphic climax", "disclimax", "catastrophic climax"], note: "A disturbance-maintained subclimax community is a disclimax." },
+      { week: 6, num: 3, q: "Species abundance may be expressed in terms of:", a: "Number of individuals, biomass or cover", opts: ["Climate, soil and slope", "Number of individuals, biomass or cover", "Hydrosere, xerosere and halosere", "Resistance, resilience and stability"], note: "Direct quantification parameters of population presence." },
+      { week: 6, num: 4, q: "Resistance refers to the ability of a community to:", a: "Persist without change in the face of disturbance", opts: ["Recover quickly after disturbance", "Persist without change in the face of disturbance", "Increase the number of pioneer species", "Replace one seral stage with another"], note: "Resistance = withstand change; Resilience = bounce back after change." },
+      { week: 6, num: 5, q: "Importance Value (IV) can be written as:", a: "Relative density + Relative frequency + Relative dominance", opts: ["Relative density + Relative frequency X Relative dominance", "Relative density X Relative frequency + Relative dominance", "Relative density + Relative frequency + Relative dominance", "Relative density X Relative frequency X Relative dominance"], note: "IV = RD + RF + RDom (summing up to 300%)." },
+      { week: 6, num: 6, q: "Secondary succession refers to succession that occurs:", a: "After severe disturbance or removal of a pre-existing community", opts: ["On newly exposed rock or sand surfaces", "In a saline body such as a marsh", "After severe disturbance or removal of a pre-existing community", "Only when climate controls the final community"], note: "Occurs on pre-existing soil seed banks after disturbance." },
+      { week: 6, num: 7, q: "Lithosere is an example of:", a: "xerosere", opts: ["hydrosere", "xerosere", "psammosere", "halosere"], note: "Succession starting on bare dry rock is a lithosere (type of xerosere)." },
+      { week: 6, num: 8, q: "A transition area where two communities meet and integrate is called:", a: "Ecotone", opts: ["Habitat", "Niche", "Ecotone", "Sere"], note: "Ecotones often exhibit the 'edge effect' with elevated species richness." },
+      { week: 6, num: 9, q: "Which relationship between niches is correct?", a: "a or b (Fundamental niche >= Realised niche)", opts: ["Fundamental niche > Realised niche", "Fundamental niche = Realised niche", "Fundamental niche < Realised niche", "a or b"], note: "Competition restricts the theoretical fundamental niche to the realised niche." },
+      { week: 6, num: 10, q: "Species richness refers to:", a: "Number of species", opts: ["Number of species", "Number of individuals of one species", "Biomass of the dominant species", "Basal area of all trees"], note: "A pure count of different species within a designated boundary." },
 
       // Week 7
-      { week: 7, num: 1, q: "In an estuary, species may use areas of:", a: "high, intermediate, and low salinity", opts: ["high, intermediate, and low salinity", "only high temperature and high fertility", "only alpine wind and poor soil", "only forest canopy and grassland patches"] },
-      { week: 7, num: 2, q: "Movement of individuals away from birth place into a new habitat to survive and reproduce is:", a: "dispersal", opts: ["translocation", "migration", "dispersal", "drifting"] },
-      { week: 7, num: 3, q: "Transplantation experiments are used to find:", a: "potential range", opts: ["potential range", "effective range", "actual range", "economic range"] },
-      { week: 7, num: 4, q: "Pneumatophores are roots that:", a: "grow upward from the ground to obtain air", opts: ["move downward to store excess salts", "spread into sand dunes to stop wind erosion", "grow upward from the ground to obtain air", "become thorns to reduce transpiration"] },
-      { week: 7, num: 5, q: "At night, cooler and denser air from upper hill areas flows down towards the valley. This is called:", a: "hill wind", opts: ["valley breeze", "hill wind", "ocean breeze", "estuary current"] },
-      { week: 7, num: 6, q: "Flamingos in the Rann of Kutch are associated with water bodies because they need:", a: "food organisms in water and safe breeding conditions", opts: ["high wind speeds and snow-covered slopes", "food organisms in water and safe breeding conditions", "dry deciduous leaves for summer feeding", "tall coniferous trees for nesting"] },
-      { week: 7, num: 7, q: "Estuaries are specialized habitats because they contain:", a: "a meeting zone of freshwater and saline water", opts: ["only freshwater throughout the year", "only saline water throughout the year", "only dry land and thorny shrubs", "a meeting zone of freshwater and saline water"] },
-      { week: 7, num: 8, q: "The movement of lions across the Gir landscape is an example of:", a: "diffusion", opts: ["diffusion", "secular dispersal", "jump dispersal", "drifting"] },
-      { week: 7, num: 9, q: "Mangroves are adapted to areas that experience:", a: "high salinity and partial or complete inundation", opts: ["low salinity and permanent dryness", "snow accumulation and alpine winds", "deep desert sand with no water movement", "high salinity and partial or complete inundation"] },
-      { week: 7, num: 10, q: "Scarcity of food is a:", a: "push factor", opts: ["chemical factor", "demographic factor", "push factor", "pull factor"] },
+      { week: 7, num: 1, q: "In an estuary, species may use areas of:", a: "high, intermediate, and low salinity", opts: ["high, intermediate, and low salinity", "only high temperature and high fertility", "only alpine wind and poor soil", "only forest canopy and grassland patches"], note: "Estuarine salinity gradients create broad physiological zones." },
+      { week: 7, num: 2, q: "Movement of individuals away from birth place into a new habitat to survive and reproduce is:", a: "dispersal", opts: ["translocation", "migration", "dispersal", "drifting"], note: "Dispersal avoids inbreeding depression and local resource depletion." },
+      { week: 7, num: 3, q: "Transplantation experiments are used to find:", a: "potential range", opts: ["potential range", "effective range", "actual range", "economic range"], note: "Determines whether physical barriers or physiological tolerance sets boundaries." },
+      { week: 7, num: 4, q: "Pneumatophores are roots that:", a: "grow upward from the ground to obtain air", opts: ["move downward to store excess salts", "spread into sand dunes to stop wind erosion", "grow upward from the ground to obtain air", "become thorns to reduce transpiration"], note: "Specialized breathing roots found in mangrove plants in anoxic mud." },
+      { week: 7, num: 5, q: "At night, cooler and denser air from upper hill areas flows down towards the valley. This is called:", a: "hill wind", opts: ["valley breeze", "hill wind", "ocean breeze", "estuary current"], note: "Katabatic drainage wind caused by nocturnal radiational cooling." },
+      { week: 7, num: 6, q: "Flamingos in the Rann of Kutch are associated with water bodies because they need:", a: "food organisms in water and safe breeding conditions", opts: ["high wind speeds and snow-covered slopes", "food organisms in water and safe breeding conditions", "dry deciduous leaves for summer feeding", "tall coniferous trees for nesting"], note: "Shallow hypersaline waters offer brine shrimp and sanctuary from terrestrial predators." },
+      { week: 7, num: 7, q: "Estuaries are specialized habitats because they contain:", a: "a meeting zone of freshwater and saline water", opts: ["only freshwater throughout the year", "only saline water throughout the year", "only dry land and thorny shrubs", "a meeting zone of freshwater and saline water"], note: "Brackish ecotones where rivers merge with tidal marine waters." },
+      { week: 7, num: 8, q: "The movement of lions across the Gir landscape is an example of:", a: "diffusion", opts: ["diffusion", "secular dispersal", "jump dispersal", "drifting"], note: "Gradual territorial expansion across hospitable contiguous habitat." },
+      { week: 7, num: 9, q: "Mangroves are adapted to areas that experience:", a: "high salinity and partial or complete inundation", opts: ["low salinity and permanent dryness", "snow accumulation and alpine winds", "deep desert sand with no water movement", "high salinity and partial or complete inundation"], note: "Halophytic adaptations handle periodic tidal inundation." },
+      { week: 7, num: 10, q: "Scarcity of food is a:", a: "push factor", opts: ["chemical factor", "demographic factor", "push factor", "pull factor"], note: "Push factors drive individuals away from their current habitat." },
 
       // Week 8
-      { week: 8, num: 1, q: "Which of these correctly represents the process of habitat fragmentation and loss?", a: "Original forest → Dissection → Perforation → Fragmentation → Attrition", opts: ["Original forest → Dissection → Perforation → Fragmentation → Attrition", "Original forest → Dissection → Attrition → Fragmentation → Perforation", "Original forest → Dissection → Perforation → Attrition → Fragmentation", "Original forest → Dissection → Fragmentation → Perforation → Attrition"] },
-      { week: 8, num: 2, q: "Habitat degradation means:", a: "reduction in habitat quality for a given species", opts: ["complete removal of all organisms from an area", "legal declaration of a protected area", "breaking a forest into administrative zones", "reduction in habitat quality for a given species"] },
-      { week: 8, num: 3, q: "When area is reduced by 90% and z is 0.30, species richness approximately becomes:", a: "half of the original", opts: ["one-tenth of the original", "half of the original", "double the original", "unchanged"] },
-      { week: 8, num: 4, q: "Breaking a natural landscape into small isolated parcels within human-dominated land is:", a: "habitat fragmentation", opts: ["habitat restoration", "habitat fragmentation", "ex-situ preservation", "seed dormancy"] },
-      { week: 8, num: 5, q: "We prefer those areas for the creation of a conservation reserve where the level of threat is:", a: "medium", opts: ["very high", "medium", "very low", "non-existent"] },
-      { week: 8, num: 6, q: "A small population moving toward extinction due to Allee effects and demographic stochasticity is studied under:", a: "small population paradigm", opts: ["habitat displacement", "small population paradigm", "reserve design", "biodiversity repository"] },
-      { week: 8, num: 7, q: "A population shrinking due to habitat loss, competitors, and poaching is best studied under:", a: "declining population paradigm", opts: ["declining population paradigm", "small population paradigm", "island biogeography model", "cryopreservation strategy"] },
-      { week: 8, num: 8, q: "Which of these is a deterministic factor?", a: "death rate", opts: ["environmental variation", "forest fire", "death rate", "diseases"] },
-      { week: 8, num: 9, q: "Linear structures like roads and railways contribute to fragmentation because they act as:", a: "mortality sources and physical barriers", opts: ["mortality sources and physical barriers", "seed collection centres", "botanical repositories", "cryopreservation facilities"] },
-      { week: 8, num: 10, q: "The acronym HIPPO does not include:", a: "pollination", opts: ["habitat loss", "invasive species", "pollination", "pollution"] },
+      { week: 8, num: 1, q: "Which of these correctly represents the process of habitat fragmentation and loss?", a: "Original forest → Dissection → Perforation → Fragmentation → Attrition", opts: ["Original forest → Dissection → Perforation → Fragmentation → Attrition", "Original forest → Dissection → Attrition → Fragmentation → Perforation", "Original forest → Dissection → Perforation → Attrition → Fragmentation", "Original forest → Dissection → Fragmentation → Perforation → Attrition"], note: "Forman's spatial sequence of landscape alteration." },
+      { week: 8, num: 2, q: "Habitat degradation means:", a: "reduction in habitat quality for a given species", opts: ["complete removal of all organisms from an area", "legal declaration of a protected area", "breaking a forest into administrative zones", "reduction in habitat quality for a given species"], note: "The area remains habitat, but supports fewer individuals or lower fitness." },
+      { week: 8, num: 3, q: "When area is reduced by 90% and z is 0.30, species richness approximately becomes:", a: "half of the original", opts: ["one-tenth of the original", "half of the original", "double the original", "unchanged"], note: "(0.10)^0.30 ≈ 0.50 (Richness drops to ~50%)." },
+      { week: 8, num: 4, q: "Breaking a natural landscape into small isolated parcels within human-dominated land is:", a: "habitat fragmentation", opts: ["habitat restoration", "habitat fragmentation", "ex-situ preservation", "seed dormancy"], note: "Leads to patch isolation and pronounced edge effects." },
+      { week: 8, num: 5, q: "We prefer those areas for the creation of a conservation reserve where the level of threat is:", a: "medium", opts: ["very high", "medium", "very low", "non-existent"], note: "Medium-threat areas deliver the highest return-on-investment for protection." },
+      { week: 8, num: 6, q: "A small population moving toward extinction due to Allee effects and demographic stochasticity is studied under:", a: "small population paradigm", opts: ["habitat displacement", "small population paradigm", "reserve design", "biodiversity repository"], note: "Focuses on extinction vortex dynamics in already small cohorts." },
+      { week: 7, num: 7, q: "A population shrinking due to habitat loss, competitors, and poaching is best studied under:", a: "declining population paradigm", opts: ["declining population paradigm", "small population paradigm", "island biogeography model", "cryopreservation strategy"], note: "Diagnoses extrinsic causative agents responsible for population drops." },
+      { week: 8, num: 8, q: "Which of these is a deterministic factor?", a: "death rate", opts: ["environmental variation", "forest fire", "death rate", "diseases"], note: "Average death rate is an intrinsic population demographic property." },
+      { week: 8, num: 9, q: "Linear structures like roads and railways contribute to fragmentation because they act as:", a: "mortality sources and physical barriers", opts: ["mortality sources and physical barriers", "seed collection centres", "botanical repositories", "cryopreservation facilities"], note: "Roadkill mortality and avoidance behavior bisect natural ranges." },
+      { week: 8, num: 10, q: "The acronym HIPPO does not include:", a: "pollination", opts: ["habitat loss", "invasive species", "pollination", "pollution"], note: "HIPPO: Habitat loss, Invasive species, Pollution, Population (human), Overharvesting." },
 
       // Week 9
-      { week: 9, num: 1, q: "A proposed epoch marked by significant human impact on Earth's geology and ecosystems is:", a: "Anthropocene", opts: ["Holocene", "Anthropocene", "Pleistocene", "Carboniferous"] },
-      { week: 9, num: 2, q: "According to the Malthusian model:", a: "Population grows in geometric progression, food supply increases in arithmetic progression", opts: ["Population grows in geometric progression, food supply increases in arithmetic progression", "Population grows in geometric progression, food supply increases in geometric progression", "Population grows in arithmetic progression, food supply increases in arithmetic progression", "Population grows in arithmetic progression, food supply increases in geometric progression"] },
-      { week: 9, num: 3, q: "Which of these is NOT a primary pillar of sustainability?", a: "trans-boundary sustainability", opts: ["environmental sustainability", "economic sustainability", "trans-boundary sustainability", "social sustainability"] },
-      { week: 9, num: 4, q: "The demographic transition sees a society move from:", a: "high birth rate, high death rate to low birth rate, low death rate", opts: ["high birth rate, high death rate to low birth rate, low death rate", "low birth rate, high death rate to low birth rate, low death rate", "high birth rate, low death rate to low birth rate, low death rate", "high birth rate, high death rate to low birth rate, high death rate"] },
-      { week: 9, num: 5, q: "Which of the following is listed as a theme of clean technology?", a: "Water purification", opts: ["Water purification", "Predator-prey control", "Migration of birds", "Food chain length"] },
-      { week: 9, num: 6, q: "When stalactites and stalagmites join together, they form a:", a: "Column", opts: ["Lagoon", "Crevice", "Terrace", "Column"] },
-      { week: 9, num: 7, q: "Which of these is a preventive check according to Malthus?", a: "foresight", opts: ["foresight", "vice", "misery", "flood"] },
-      { week: 9, num: 8, q: "Which of these is a recognised pillar of sustainability?", a: "social sustainability", opts: ["social sustainability", "industrial sustainability", "agricultural sustainability", "trans-boundary sustainability"] },
-      { week: 9, num: 9, q: "In cave formations, deposits growing downward from the roof are called:", a: "Stalactites", opts: ["Stalagmites", "Columns", "Stalactites", "Sediment bars"] },
-      { week: 9, num: 10, q: "Industrial processes such as the Haber process directly affect which biogeochemical cycle?", a: "Nitrogen cycle", opts: ["Carbon cycle only", "Water cycle only", "Nitrogen cycle", "Phosphorus cycle only"] },
+      { week: 9, num: 1, q: "A proposed epoch marked by significant human impact on Earth's geology and ecosystems is:", a: "Anthropocene", opts: ["Holocene", "Anthropocene", "Pleistocene", "Carboniferous"], note: "Coined by Crutzen and Stoermer to mark human domination of planetary systems." },
+      { week: 9, num: 2, q: "According to the Malthusian model:", a: "Population grows in geometric progression, food supply increases in arithmetic progression", opts: ["Population grows in geometric progression, food supply increases in arithmetic progression", "Population grows in geometric progression, food supply increases in geometric progression", "Population grows in arithmetic progression, food supply increases in arithmetic progression", "Population grows in arithmetic progression, food supply increases in geometric progression"], note: "Exponential biological growth inevitably collides with linear food production." },
+      { week: 9, num: 3, q: "Which of these is NOT a primary pillar of sustainability?", a: "trans-boundary sustainability", opts: ["environmental sustainability", "economic sustainability", "trans-boundary sustainability", "social sustainability"], note: "The 3 classical pillars are Environmental, Economic, and Social." },
+      { week: 9, num: 4, q: "The demographic transition sees a society move from:", a: "high birth rate, high death rate to low birth rate, low death rate", opts: ["high birth rate, low death rate to low birth rate, low death rate", "low birth rate, high death rate to low birth rate, low death rate", "high birth rate, high death rate to low birth rate, low death rate", "high birth rate, high death rate to low birth rate, high death rate"], note: "Modernization stabilizes population growth at low fertility/mortality." },
+      { week: 9, num: 5, q: "Which of the following is listed as a theme of clean technology?", a: "Water purification", opts: ["Water purification", "Predator-prey control", "Migration of birds", "Food chain length"], note: "Clean technologies focus on resource optimization and wastewater remediation." },
+      { week: 9, num: 6, q: "When stalactites and stalagmites join together, they form a:", a: "Column", opts: ["Lagoon", "Crevice", "Terrace", "Column"], note: "Continuous precipitation of mineral calcium carbonate creates vertical pillars." },
+      { week: 9, num: 7, q: "Which of these is a preventive check according to Malthus?", a: "foresight", opts: ["foresight", "vice", "misery", "flood"], note: "Preventive checks involve voluntary restraint, foresight, and birth delay." },
+      { week: 9, num: 8, q: "Which of these is a recognised pillar of sustainability?", a: "social sustainability", opts: ["social sustainability", "industrial sustainability", "agricultural sustainability", "trans-boundary sustainability"], note: "Social equity forms one of the three core pillars." },
+      { week: 9, num: 9, q: "In cave formations, deposits growing downward from the roof are called:", a: "Stalactites", opts: ["Stalagmites", "Columns", "Stalactites", "Sediment bars"], note: "Stalactites hold 'tight' to the ceiling; stalagmites grow from the 'ground'." },
+      { week: 9, num: 10, q: "Industrial processes such as the Haber process directly affect which biogeochemical cycle?", a: "Nitrogen cycle", opts: ["Carbon cycle only", "Water cycle only", "Nitrogen cycle", "Phosphorus cycle only"], note: "Synthesizes ammonia directly from atmospheric N2 gas." },
 
       // Week 10
-      { week: 10, num: 1, q: "A community already affected by disease, weeds, pollutants, or livestock pressure is best described as:", a: "Disturbed community", opts: ["Pristine community", "Climax community", "Resistant community", "Disturbed community"] },
-      { week: 10, num: 2, q: "When an organism absorbs a toxic substance into its tissues faster than it loses it, the process is:", a: "Bioaccumulation", opts: ["Biomagnification", "Bioavailability", "Bioaccumulation", "Biodegradation"] },
-      { week: 10, num: 3, q: "What percentage of marine plastic debris is stated to sink to the ocean bottom?", a: "70%", opts: ["15%", "30%", "50%", "70%"] },
-      { week: 10, num: 4, q: "Hydrocarbons derived directly from mineral oils are called:", a: "Petrogenic hydrocarbons", opts: ["Pyrogenic hydrocarbons", "Biogenic hydrocarbons", "Aromatic hydrocarbons", "Petrogenic hydrocarbons"] },
-      { week: 10, num: 5, q: "\"Any changes that inadvertently increase vulnerability to climatic stimuli rather than reducing it\" is:", a: "maladaptation", opts: ["adaptation", "mitigation", "maladaptation", "malmitigation"] },
-      { week: 10, num: 6, q: "A normal community faces one large disturbance and then returns close to its earlier condition. This is:", a: "Recovery", opts: ["Long-term alteration", "Recovery", "Bioaccumulation", "Habitat displacement"] },
-      { week: 10, num: 7, q: "Macrodebris in the context of plastic debris has fragments of size:", a: "> 20 mm", opts: ["> 20 mm", "5-20 mm", "< 5 mm", "< 1 mm"] },
-      { week: 10, num: 8, q: "The Deepwater Horizon incident is classified by origin as which kind of oil spill?", a: "Accidental", opts: ["Natural", "Accidental", "Intentional", "Biogenic"] },
-      { week: 10, num: 9, q: "Harmful effects caused by a single or short-term exposure are called:", a: "Acute toxicity", opts: ["Chronic toxicity", "Acute toxicity", "Sub-lethal exposure", "Bioavailability"] },
-      { week: 10, num: 10, q: "Mesodebris in the context of plastic debris has fragments of size:", a: "5-20 mm", opts: ["> 20 mm", "5-20 mm", "< 5 mm", "< 1 mm"] },
+      { week: 10, num: 1, q: "A community already affected by disease, weeds, pollutants, or livestock pressure is best described as:", a: "Disturbed community", opts: ["Pristine community", "Climax community", "Resistant community", "Disturbed community"], note: "Subjected to persistent anthropogenic or biological stresses." },
+      { week: 10, num: 2, q: "When an organism absorbs a toxic substance into its tissues faster than it loses it, the process is:", a: "Bioaccumulation", opts: ["Biomagnification", "Bioavailability", "Bioaccumulation", "Biodegradation"], note: "Individual uptake exceeds metabolic elimination; Biomagnification is up food chains." },
+      { week: 10, num: 3, q: "What percentage of marine plastic debris is stated to sink to the ocean bottom?", a: "70%", opts: ["15%", "30%", "50%", "70%"], note: "The majority of dense polymers and fouled plastics accumulate in benthic zones." },
+      { week: 10, num: 4, q: "Hydrocarbons derived directly from mineral oils are called:", a: "Petrogenic hydrocarbons", opts: ["Pyrogenic hydrocarbons", "Biogenic hydrocarbons", "Aromatic hydrocarbons", "Petrogenic hydrocarbons"], note: "Derived from crude petroleum; Pyrogenic arises from combustion." },
+      { week: 10, num: 5, q: "\"Any changes that inadvertently increase vulnerability to climatic stimuli rather than reducing it\" is:", a: "maladaptation", opts: ["adaptation", "mitigation", "maladaptation", "malmitigation"], note: "Counterproductive climate adaptations that exacerbate systemic risks." },
+      { week: 10, num: 6, q: "A normal community faces one large disturbance and then returns close to its earlier condition. This is:", a: "Recovery", opts: ["Long-term alteration", "Recovery", "Bioaccumulation", "Habitat displacement"], note: "Resilient ecosystem dynamic restoring initial community baseline." },
+      { week: 10, num: 7, q: "Macrodebris in the context of plastic debris has fragments of size:", a: "> 20 mm", opts: ["> 20 mm", "5-20 mm", "< 5 mm", "< 1 mm"], note: "Macro: > 20 mm; Meso: 5–20 mm; Micro: < 5 mm." },
+      { week: 10, num: 8, q: "The Deepwater Horizon incident is classified by origin as which kind of oil spill?", a: "Accidental", opts: ["Natural", "Accidental", "Intentional", "Biogenic"], note: "Catastrophic accidental industrial well blowout in the Gulf of Mexico (2010)." },
+      { week: 10, num: 9, q: "Harmful effects caused by a single or short-term exposure are called:", a: "Acute toxicity", opts: ["Chronic toxicity", "Acute toxicity", "Sub-lethal exposure", "Bioavailability"], note: "Immediate adverse reactions; Chronic toxicity develops over long durations." },
+      { week: 10, num: 10, q: "Mesodebris in the context of plastic debris has fragments of size:", a: "5-20 mm", opts: ["> 20 mm", "5-20 mm", "< 5 mm", "< 1 mm"], note: "Intermediate particle size range (0.5 cm to 2 cm)." },
 
       // Week 11
-      { week: 11, num: 1, q: "Which term refers to the total weight of organisms removed by fishing?", a: "Yield to fishery", opts: ["Natural mortality", "Recruitment", "Growth", "Yield to fishery"] },
-      { week: 11, num: 2, q: "Ludwig's ratchet predicts:", a: "increasing harvesting rate", opts: ["decreasing harvesting rate", "constant harvesting rate", "increasing harvesting rate", "fluctuating harvesting rate"] },
-      { week: 11, num: 3, q: "A forest converted to an open mine was later filled with water into a bird sanctuary lake. This is:", a: "replacement", opts: ["recovery", "restoration", "enhancement", "replacement"] },
-      { week: 11, num: 4, q: "Which statement about Maximum Sustainable Yield (MSY) is correct?", a: "The maximum sustainable yield is near the mid-point of the sigmoidal curve.", opts: ["The maximum sustainable yield is near the beginning of the sigmoidal curve.", "The maximum sustainable yield is near the mid-point of the sigmoidal curve.", "The maximum sustainable yield is near the end of the sigmoidal curve.", "None of these."] },
-      { week: 11, num: 5, q: "Which population balance equation is correct (Recruitment, Growth, Natural Mortality, Fishing)?", a: "R + G = M + F", opts: ["R + G = M + F", "R + M = G + F", "R + F = M + G", "R + G + M + F = 0"] },
-      { week: 11, num: 6, q: "In a logistic growth curve, growth is slow near carrying capacity mainly because the population is:", a: "close to the environmental limit", opts: ["very small", "newly introduced", "close to the environmental limit", "free from competition"] },
-      { week: 11, num: 7, q: "What does absolute abundance measure?", a: "Actual number of individuals present", opts: ["Relative catch per unit effort", "Actual number of individuals present", "Percentage change in population", "Estimated trend in sightings"] },
-      { week: 11, num: 8, q: "A root zone treatment plant is an example of:", a: "phytoremediation", opts: ["phytoremediation", "biological control", "biomagnification", "bioaccumulation"] },
-      { week: 11, num: 9, q: "What is a major risk of introducing predators for pest control?", a: "The introduced predator may itself become a pest", opts: ["The pest always becomes extinct immediately", "The predator cannot reproduce under any condition", "The predator reduces rainfall", "The introduced predator may itself become a pest"] },
-      { week: 11, num: 10, q: "Ecotoxicology studies toxic chemicals mainly at which broader levels?", a: "Population, community, ecosystem, and biosphere levels", opts: ["Individual atoms and molecules only", "Population, community, ecosystem, and biosphere levels", "Market demand and harvesting cost only", "Crop yield and storage levels only"] },
+      { week: 11, num: 1, q: "Which term refers to the total weight of organisms removed by fishing?", a: "Yield to fishery", opts: ["Natural mortality", "Recruitment", "Growth", "Yield to fishery"], note: "Commercial biomass harvested by fishing operations." },
+      { week: 11, num: 2, q: "Ludwig's ratchet predicts:", a: "increasing harvesting rate", opts: ["decreasing harvesting rate", "constant harvesting rate", "increasing harvesting rate", "fluctuating harvesting rate"], note: "Economic pressures during good years prevent harvest reductions in lean years." },
+      { week: 11, num: 3, q: "A forest converted to an open mine was later filled with water into a bird sanctuary lake. This is:", a: "replacement", opts: ["recovery", "restoration", "enhancement", "replacement"], note: "Substituting a completely different ecosystem type for the destroyed one." },
+      { week: 11, num: 4, q: "Which statement about Maximum Sustainable Yield (MSY) is correct?", a: "The maximum sustainable yield is near the mid-point of the sigmoidal curve.", opts: ["The maximum sustainable yield is near the beginning of the sigmoidal curve.", "The maximum sustainable yield is near the mid-point of the sigmoidal curve.", "The maximum sustainable yield is near the end of the sigmoidal curve.", "None of these."], note: "Occurs at K/2 where population growth rate (dN/dt) peaks." },
+      { week: 11, num: 5, q: "Which population balance equation is correct (Recruitment, Growth, Natural Mortality, Fishing)?", a: "R + G = M + F", opts: ["R + G = M + F", "R + M = G + F", "R + F = M + G", "R + G + M + F = 0"], note: "Russell's equation: Biomass additions (R + G) balance biomass removals (M + F)." },
+      { week: 11, num: 6, q: "In a logistic growth curve, growth is slow near carrying capacity mainly because the population is:", a: "close to the environmental limit", opts: ["very small", "newly introduced", "close to the environmental limit", "free from competition"], note: "Density-dependent constraints suppress per-capita reproduction." },
+      { week: 11, num: 7, q: "What does absolute abundance measure?", a: "Actual number of individuals present", opts: ["Relative catch per unit effort", "Actual number of individuals present", "Percentage change in population", "Estimated trend in sightings"], note: "True census count of the total population size." },
+      { week: 11, num: 8, q: "A root zone treatment plant is an example of:", a: "phytoremediation", opts: ["phytoremediation", "biological control", "biomagnification", "bioaccumulation"], note: "Using wetland plants and rhizosphere microbes to cleanse wastewater." },
+      { week: 11, num: 9, q: "What is a major risk of introducing predators for pest control?", a: "The introduced predator may itself become a pest", opts: ["The pest always becomes extinct immediately", "The predator cannot reproduce under any condition", "The predator reduces rainfall", "The introduced predator may itself become a pest"], note: "Non-target impacts (e.g. Cane Toad introduction in Australia)." },
+      { week: 11, num: 10, q: "Ecotoxicology studies toxic chemicals mainly at which broader levels?", a: "Population, community, ecosystem, and biosphere levels", opts: ["Individual atoms and molecules only", "Population, community, ecosystem, and biosphere levels", "Market demand and harvesting cost only", "Crop yield and storage levels only"], note: "Focuses on ecological consequences beyond individual toxicology." },
 
       // Week 12
-      { week: 12, num: 1, q: "In cave formations, the deposits growing downward from the roof are called?", a: "Stalactites", opts: ["Stalagmites", "Columns", "Stalactites", "Sediment bars"] },
-      { week: 12, num: 2, q: "Which of these is a deterministic factor?", a: "death rate", opts: ["environmental variation", "forest fire", "death rate", "diseases"] },
-      { week: 12, num: 3, q: "An ecological interaction in which both participating organisms are harmed is called:", a: "competition", opts: ["mutualism", "commensalism", "competition", "neutralism"] },
-      { week: 12, num: 4, q: "Ecology is the scientific study of ____ that determine the distribution and abundance of organisms.", a: "interactions", opts: ["statics", "interactions", "dynamics", "habitat"] },
-      { week: 12, num: 5, q: "Mesodebris in the context of plastic debris has fragments of size:", a: "5-20 mm", opts: ["> 20 mm", "5-20 mm", "< 5 mm", "< 1 mm"] },
-      { week: 12, num: 6, q: "Which level is formed when similar cells and their extracellular matrix from the same origin together perform a specific function?", a: "Tissue", opts: ["Organ", "Tissue", "Organ system", "Population"] },
-      { week: 12, num: 7, q: "Secondary succession refers to succession that occurs:", a: "After severe disturbance or removal of a pre-existing community", opts: ["On newly exposed rock or sand surfaces", "In a saline body such as a marsh", "After severe disturbance or removal of a pre-existing community", "Only when climate controls the final community"] },
-      { week: 12, num: 8, q: "A group of organs working together to perform one or more functions is called?", a: "Organ system", opts: ["Tissue", "Organ", "Organism", "Organ system"] },
-      { week: 12, num: 9, q: "After a forest fire, an incompletely destroyed forest develops through stages toward stability. This is:", a: "Secondary succession", opts: ["Secondary succession", "Climatic climax", "Bioaccumulation", "Species-area effect"] },
-      { week: 12, num: 10, q: "If organisms already present in an area change the soil conditions and thereby drive further community change, the succession is:", a: "Autogenic succession", opts: ["Allogenic succession", "Autogenic succession", "Catastrophic succession", "Seasonal succession"] }
+      { week: 12, num: 1, q: "In cave formations, the deposits growing downward from the roof are called?", a: "Stalactites", opts: ["Stalagmites", "Columns", "Stalactites", "Sediment bars"], note: "Mineral dripstones suspended from the ceiling." },
+      { week: 12, num: 2, q: "Which of these is a deterministic factor?", a: "death rate", opts: ["environmental variation", "forest fire", "death rate", "diseases"], note: "Demographic averages operating predictably across cohorts." },
+      { week: 12, num: 3, q: "An ecological interaction in which both participating organisms are harmed is called:", a: "competition", opts: ["mutualism", "commensalism", "competition", "neutralism"], note: "Mutually negative (- / -) relationship." },
+      { week: 12, num: 4, q: "Ecology is the scientific study of ____ that determine the distribution and abundance of organisms.", a: "interactions", opts: ["statics", "interactions", "dynamics", "habitat"], note: "Foundational core definition of ecological science." },
+      { week: 12, num: 5, q: "Mesodebris in the context of plastic debris has fragments of size:", a: "5-20 mm", opts: ["> 20 mm", "5-20 mm", "< 5 mm", "< 1 mm"], note: "5 mm to 20 mm fragment size." },
+      { week: 12, num: 6, q: "Which level is formed when similar cells and their extracellular matrix from the same origin together perform a specific function?", a: "Tissue", opts: ["Organ", "Tissue", "Organ system", "Population"], note: "Biological tissue level." },
+      { week: 12, num: 7, q: "Secondary succession refers to succession that occurs:", a: "After severe disturbance or removal of a pre-existing community", opts: ["On newly exposed rock or sand surfaces", "In a saline body such as a marsh", "After severe disturbance or removal of a pre-existing community", "Only when climate controls the final community"], note: "Develops on pre-conditioned organic substrate." },
+      { week: 12, num: 8, q: "A group of organs working together to perform one or more functions is called?", a: "Organ system", opts: ["Tissue", "Organ", "Organism", "Organ system"], note: "Higher tier anatomical systems (e.g. digestive, circulatory)." },
+      { week: 12, num: 9, q: "After a forest fire, an incompletely destroyed forest develops through stages toward stability. This is:", a: "Secondary succession", opts: ["Secondary succession", "Climatic climax", "Bioaccumulation", "Species-area effect"], note: "Fire rarely sterilizes soil, fostering secondary sere progression." },
+      { week: 12, num: 10, q: "If organisms already present in an area change the soil conditions and thereby drive further community change, the succession is:", a: "Autogenic succession", opts: ["Allogenic succession", "Autogenic succession", "Catastrophic succession", "Seasonal succession"], note: "Autogenic = biologically driven changes from within the biota." }
     ];
 
+    // Local Storage Progress Persistence
+    let masteredCards = JSON.parse(localStorage.getItem('we_mastered_cards') || '[]');
+
+    function saveMastered() {
+      localStorage.setItem('we_mastered_cards', JSON.stringify(masteredCards));
+      updateMasteredUI();
+    }
+
+    function updateMasteredUI() {
+      const count = masteredCards.length;
+      document.getElementById('masteredCount').textContent = count;
+      const mobileBadge = document.getElementById('statBadgeMobile');
+      if (mobileBadge) mobileBadge.innerHTML = `<i class="fa-solid fa-bolt mr-1"></i>${count} Mastered`;
+    }
+
+    // State Variables
     let currentFilteredList = [...assignmentsData];
     let currentFcIndex = 0;
     let isFlipped = false;
@@ -310,6 +451,9 @@
     let currentQuizIndex = 0;
     let quizScore = 0;
 
+    const optionLetters = ['(a)', '(b)', '(c)', '(d)'];
+
+    // DOM References
     const weekFilter = document.getElementById('weekFilter');
     const btnFlashcards = document.getElementById('btnFlashcards');
     const btnQuiz = document.getElementById('btnQuiz');
@@ -324,19 +468,25 @@
     const fcQuestion = document.getElementById('fcQuestion');
     const fcOptionsList = document.getElementById('fcOptionsList');
     const fcAnswer = document.getElementById('fcAnswer');
-    const fcCategory = document.getElementById('fcCategory');
-    const fcCardCount = document.getElementById('fcCardCount');
+    const fcExplainer = document.getElementById('fcExplainer');
     const fcTag = document.getElementById('fcTag');
+    const fcProgressRatio = document.getElementById('fcProgressRatio');
     const fcWeekText = document.getElementById('fcWeekText');
+    const fcBackWeekBadge = document.getElementById('fcBackWeekBadge');
+    const trackerCurrent = document.getElementById('trackerCurrent');
+    const trackerCategory = document.getElementById('trackerCategory');
+    const starIcon = document.getElementById('starIcon');
 
+    // Controls
     const btnPrev = document.getElementById('btnPrev');
     const btnNext = document.getElementById('btnNext');
     const btnFlip = document.getElementById('btnFlip');
     const fcShuffle = document.getElementById('fcShuffle');
+    const fcMarkMastered = document.getElementById('fcMarkMastered');
 
-    const optionLetters = ['(a)', '(b)', '(c)', '(d)'];
-
+    // Filter Change
     weekFilter.addEventListener('change', () => {
+      playTone(520, 'sine', 0.05);
       const selected = weekFilter.value;
       if (selected === 'all') {
         currentFilteredList = [...assignmentsData];
@@ -349,25 +499,27 @@
       if (!browseView.classList.contains('hidden')) renderBrowseList();
     });
 
+    // View Switching
     function setView(view) {
+      playTone(480, 'sine', 0.05);
       flashcardView.classList.add('hidden');
       quizView.classList.add('hidden');
       browseView.classList.add('hidden');
 
-      btnFlashcards.className = "px-2.5 py-1 text-xs font-semibold rounded-md text-slate-300 hover:text-white transition";
-      btnQuiz.className = "px-2.5 py-1 text-xs font-semibold rounded-md text-slate-300 hover:text-white transition";
-      btnBrowse.className = "px-2.5 py-1 text-xs font-semibold rounded-md text-slate-300 hover:text-white transition";
+      btnFlashcards.className = "px-3 py-1 text-xs font-semibold rounded-lg text-slate-300 hover:text-white transition";
+      btnQuiz.className = "px-3 py-1 text-xs font-semibold rounded-lg text-slate-300 hover:text-white transition";
+      btnBrowse.className = "px-3 py-1 text-xs font-semibold rounded-lg text-slate-300 hover:text-white transition";
 
       if (view === 'flashcard') {
         flashcardView.classList.remove('hidden');
-        btnFlashcards.className = "px-2.5 py-1 text-xs font-semibold rounded-md bg-emerald-500 text-slate-900 transition";
+        btnFlashcards.className = "px-3 py-1 text-xs font-bold rounded-lg bg-emerald-500 text-slate-950 shadow-md transition";
       } else if (view === 'quiz') {
         quizView.classList.remove('hidden');
-        btnQuiz.className = "px-2.5 py-1 text-xs font-semibold rounded-md bg-emerald-500 text-slate-900 transition";
+        btnQuiz.className = "px-3 py-1 text-xs font-bold rounded-lg bg-emerald-500 text-slate-950 shadow-md transition";
         startQuizMode();
       } else if (view === 'browse') {
         browseView.classList.remove('hidden');
-        btnBrowse.className = "px-2.5 py-1 text-xs font-semibold rounded-md bg-emerald-500 text-slate-900 transition";
+        btnBrowse.className = "px-3 py-1 text-xs font-bold rounded-lg bg-emerald-500 text-slate-950 shadow-md transition";
         renderBrowseList();
       }
     }
@@ -376,7 +528,9 @@
     btnQuiz.addEventListener('click', () => setView('quiz'));
     btnBrowse.addEventListener('click', () => setView('browse'));
 
+    // Flip Card Action
     function flipCurrentCard() {
+      playTone(isFlipped ? 380 : 640, 'triangle', 0.07);
       isFlipped = !isFlipped;
       if (isFlipped) cardInner.classList.add('rotate-y-180');
       else cardInner.classList.remove('rotate-y-180');
@@ -388,6 +542,7 @@
       flipCurrentCard();
     });
 
+    // Update Card UI
     function updateFlashcard() {
       if (currentFilteredList.length === 0) return;
       if (isFlipped) {
@@ -397,27 +552,58 @@
       const item = currentFilteredList[currentFcIndex];
       fcQuestion.textContent = item.q;
 
+      // Populate interactive options on front
       fcOptionsList.innerHTML = '';
       item.opts.forEach((opt, idx) => {
         const row = document.createElement('div');
-        row.className = "flex items-start gap-2 p-1.5 sm:p-2 rounded-lg bg-slate-900/40 border border-slate-700/60 text-xs sm:text-sm text-slate-300";
-        row.innerHTML = `<span class="font-bold text-emerald-400 shrink-0 text-xs">${optionLetters[idx]}</span> <span class="leading-tight">${opt}</span>`;
+        row.className = "flex items-start gap-2.5 p-2 rounded-xl bg-slate-900/60 border border-slate-800 text-xs sm:text-sm text-slate-300 hover:border-emerald-500/30 transition leading-snug";
+        row.innerHTML = `<span class="font-black text-emerald-400 shrink-0 text-xs px-1.5 py-0.5 rounded bg-emerald-950/60 border border-emerald-800/40">${optionLetters[idx]}</span> <span class="pt-0.5">${opt}</span>`;
         fcOptionsList.appendChild(row);
       });
 
+      // Find correct letter prefix
       const correctIdx = item.opts.findIndex(opt => opt.trim().toLowerCase() === item.a.trim().toLowerCase());
       const prefix = correctIdx !== -1 ? `${optionLetters[correctIdx]} ` : '';
 
       fcAnswer.textContent = `${prefix}${item.a}`;
-      fcCategory.textContent = `Week ${item.week} • Q${item.num}`;
-      fcCardCount.textContent = `Card ${currentFcIndex + 1} of ${currentFilteredList.length}`;
+      fcExplainer.innerHTML = `<strong class="text-emerald-400 font-semibold block mb-1">Key Context:</strong> ${item.note}`;
+      
       fcTag.textContent = `Week ${item.week}`;
-      fcWeekText.textContent = `Week ${item.week} - Q${item.num}`;
+      fcWeekText.textContent = `Week ${item.week} • Question ${item.num}`;
+      fcBackWeekBadge.textContent = `Week ${item.week} #Q${item.num}`;
+      fcProgressRatio.textContent = `${currentFcIndex + 1}/${currentFilteredList.length}`;
+      trackerCurrent.textContent = `Question ${currentFcIndex + 1} of ${currentFilteredList.length}`;
+      trackerCategory.textContent = `Week ${item.week} Focus`;
+
+      // Check mastered star status
+      const cardKey = `W${item.week}_Q${item.num}`;
+      if (masteredCards.includes(cardKey)) {
+        starIcon.className = "fa-solid fa-star text-amber-400";
+      } else {
+        starIcon.className = "fa-regular fa-star text-slate-400";
+      }
     }
+
+    // Toggle Mastered
+    fcMarkMastered.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const item = currentFilteredList[currentFcIndex];
+      const cardKey = `W${item.week}_Q${item.num}`;
+      if (masteredCards.includes(cardKey)) {
+        masteredCards = masteredCards.filter(k => k !== cardKey);
+        playTone(320, 'sine', 0.08);
+      } else {
+        masteredCards.push(cardKey);
+        playTone(720, 'sine', 0.1);
+      }
+      saveMastered();
+      updateFlashcard();
+    });
 
     btnPrev.addEventListener('click', (e) => {
       e.stopPropagation();
       if (currentFcIndex > 0) {
+        playTone(420, 'sine', 0.04);
         currentFcIndex--;
         updateFlashcard();
       }
@@ -426,17 +612,20 @@
     btnNext.addEventListener('click', (e) => {
       e.stopPropagation();
       if (currentFcIndex < currentFilteredList.length - 1) {
+        playTone(460, 'sine', 0.04);
         currentFcIndex++;
         updateFlashcard();
       }
     });
 
     fcShuffle.addEventListener('click', () => {
+      playTone(550, 'triangle', 0.1);
       currentFilteredList.sort(() => Math.random() - 0.5);
       currentFcIndex = 0;
       updateFlashcard();
     });
 
+    // Keyboard support
     document.addEventListener('keydown', (e) => {
       if (!flashcardView.classList.contains('hidden')) {
         if (e.code === 'Space') {
@@ -456,6 +645,7 @@
       }
     });
 
+    // Dynamic Quiz Mode Logic
     function startQuizMode() {
       quizQuestions = [...currentFilteredList].sort(() => Math.random() - 0.5).slice(0, 15);
       currentQuizIndex = 0;
@@ -469,8 +659,8 @@
         return;
       }
       const item = quizQuestions[currentQuizIndex];
-      document.getElementById('quizProgress').textContent = `Question ${currentQuizIndex + 1} of ${quizQuestions.length} (Week ${item.week})`;
-      document.getElementById('quizScoreText').textContent = `Score: ${quizScore} / ${currentQuizIndex}`;
+      document.getElementById('quizProgress').textContent = `Question ${currentQuizIndex + 1} of ${quizQuestions.length}`;
+      document.getElementById('quizScoreText').textContent = `${quizScore} / ${currentQuizIndex}`;
       document.getElementById('quizProgressBar').style.width = `${(currentQuizIndex / quizQuestions.length) * 100}%`;
       document.getElementById('quizQuestion').textContent = item.q;
 
@@ -482,56 +672,64 @@
       const shuffledOptions = [...item.opts].sort(() => Math.random() - 0.5);
       shuffledOptions.forEach(opt => {
         const btn = document.createElement('button');
-        btn.className = "w-full text-left p-3 bg-slate-700/70 hover:bg-slate-700 active:bg-slate-600 border border-slate-600 rounded-xl text-xs sm:text-sm transition font-medium leading-snug";
-        btn.textContent = opt;
-        btn.onclick = () => handleQuizAnswer(opt, item.a, btn);
+        btn.className = "w-full text-left p-3.5 bg-slate-900/70 hover:bg-slate-800 border border-slate-700/80 rounded-2xl text-xs sm:text-sm transition font-medium flex items-center justify-between group active:scale-[0.99]";
+        btn.innerHTML = `<span>${opt}</span> <i class="fa-regular fa-circle text-slate-600 group-hover:text-emerald-400 text-xs"></i>`;
+        btn.onclick = () => handleQuizAnswer(opt, item.a, btn, item.note);
         optsContainer.appendChild(btn);
       });
     }
 
-    function handleQuizAnswer(chosen, correct, clickedBtn) {
+    function handleQuizAnswer(chosen, correct, clickedBtn, note) {
       const allButtons = document.getElementById('quizOptions').querySelectorAll('button');
       allButtons.forEach(b => {
         b.disabled = true;
-        if (b.textContent.trim().toLowerCase() === correct.trim().toLowerCase()) {
-          b.className = "w-full text-left p-3 bg-emerald-600/30 border border-emerald-500 rounded-xl text-xs sm:text-sm font-semibold text-emerald-300 leading-snug";
+        const text = b.querySelector('span').textContent.trim().toLowerCase();
+        if (text === correct.trim().toLowerCase()) {
+          b.className = "w-full text-left p-3.5 bg-emerald-500/20 border-2 border-emerald-500 rounded-2xl text-xs sm:text-sm font-bold text-emerald-200 flex items-center justify-between";
+          b.innerHTML = `<span>${b.querySelector('span').textContent}</span> <i class="fa-solid fa-circle-check text-emerald-400"></i>`;
         }
       });
 
       const feedback = document.getElementById('quizFeedback');
       if (chosen.trim().toLowerCase() === correct.trim().toLowerCase()) {
+        playTone(660, 'sine', 0.12);
         quizScore++;
-        feedback.innerHTML = `<span class="text-emerald-400"><i class="fa-solid fa-circle-check"></i> Correct!</span>`;
+        feedback.innerHTML = `<span class="text-emerald-400 flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-sm"></i> Correct!</span>`;
       } else {
-        clickedBtn.className = "w-full text-left p-3 bg-rose-600/30 border border-rose-500 rounded-xl text-xs sm:text-sm font-semibold text-rose-300 leading-snug";
-        feedback.innerHTML = `<span class="text-rose-400"><i class="fa-solid fa-circle-xmark"></i> Incorrect!</span>`;
+        playTone(240, 'sawtooth', 0.15);
+        clickedBtn.className = "w-full text-left p-3.5 bg-rose-500/20 border-2 border-rose-500 rounded-2xl text-xs sm:text-sm font-bold text-rose-200 flex items-center justify-between";
+        clickedBtn.innerHTML = `<span>${clickedBtn.querySelector('span').textContent}</span> <i class="fa-solid fa-circle-xmark text-rose-400"></i>`;
+        feedback.innerHTML = `<span class="text-rose-400 flex items-center gap-1.5"><i class="fa-solid fa-circle-xmark text-sm"></i> Incorrect</span>`;
       }
 
-      document.getElementById('quizScoreText').textContent = `Score: ${quizScore} / ${currentQuizIndex + 1}`;
+      document.getElementById('quizScoreText').textContent = `${quizScore} / ${currentQuizIndex + 1}`;
       document.getElementById('quizNextBtn').classList.remove('hidden');
     }
 
     document.getElementById('quizNextBtn').addEventListener('click', () => {
+      playTone(480, 'sine', 0.05);
       currentQuizIndex++;
       loadQuizQuestion();
     });
 
     function showQuizResults() {
+      playTone(740, 'triangle', 0.25);
       const percentage = Math.round((quizScore / quizQuestions.length) * 100);
       document.getElementById('quizProgressBar').style.width = `100%`;
-      document.getElementById('quizQuestion').innerHTML = `Quiz Completed! 🎉`;
+      document.getElementById('quizQuestion').innerHTML = `Quiz Complete!`;
       document.getElementById('quizOptions').innerHTML = `
-        <div class="text-center py-5 bg-slate-900/60 rounded-xl border border-slate-700">
-          <p class="text-3xl font-black text-emerald-400 mb-1">${percentage}%</p>
-          <p class="text-slate-300 text-xs sm:text-sm font-medium">You got ${quizScore} out of ${quizQuestions.length} correct.</p>
+        <div class="text-center py-6 px-4 bg-slate-900/80 rounded-2xl border border-slate-700">
+          <div class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300 mb-2">${percentage}%</div>
+          <p class="text-slate-300 font-semibold mb-1">Score: ${quizScore} out of ${quizQuestions.length}</p>
+          <p class="text-xs text-slate-500">${percentage >= 80 ? 'Mastery level achieved! Excellent retention.' : 'Keep practicing with flashcards to reinforce weaker topics.'}</p>
         </div>
       `;
       document.getElementById('quizFeedback').innerHTML = '';
       const nextBtn = document.getElementById('quizNextBtn');
-      nextBtn.textContent = 'Retry Quiz';
+      nextBtn.innerHTML = `<i class="fa-solid fa-rotate-right mr-1"></i> Retake Practice Quiz`;
       nextBtn.classList.remove('hidden');
       nextBtn.onclick = () => {
-        nextBtn.innerHTML = `Next Question <i class="fa-solid fa-chevron-right ml-1"></i>`;
+        nextBtn.innerHTML = `Continue <i class="fa-solid fa-arrow-right ml-1"></i>`;
         nextBtn.onclick = () => {
           currentQuizIndex++;
           loadQuizQuestion();
@@ -540,6 +738,7 @@
       };
     }
 
+    // Browse & Instant Search
     function renderBrowseList() {
       const container = document.getElementById('browseList');
       const term = document.getElementById('searchInput').value.toLowerCase();
@@ -548,28 +747,30 @@
       const filtered = currentFilteredList.filter(item => 
         item.q.toLowerCase().includes(term) || 
         item.a.toLowerCase().includes(term) ||
+        item.note.toLowerCase().includes(term) ||
         `week ${item.week}`.includes(term)
       );
 
       if (filtered.length === 0) {
-        container.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">No questions match your search.</div>`;
+        container.innerHTML = `<div class="text-center py-10 text-slate-500 text-xs">No matching questions found.</div>`;
         return;
       }
 
       filtered.forEach(item => {
         const card = document.createElement('div');
-        card.className = "bg-slate-800 border border-slate-700 rounded-xl p-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2.5";
+        card.className = "bg-slate-900/70 border border-slate-800 rounded-2xl p-3.5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 hover:border-slate-700 transition";
         card.innerHTML = `
           <div class="flex-1">
-            <div class="flex items-center gap-2 mb-1">
-              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Week ${item.week}</span>
-              <span class="text-[11px] text-slate-500 font-medium">Q${item.num}</span>
+            <div class="flex items-center gap-2 mb-1.5">
+              <span class="text-[10px] font-black px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">Week ${item.week}</span>
+              <span class="text-xs text-slate-500 font-mono font-medium">Q${item.num}</span>
             </div>
-            <p class="text-xs sm:text-sm font-medium text-slate-200 leading-snug">${item.q}</p>
+            <p class="text-xs sm:text-sm font-semibold text-slate-200 leading-snug mb-1">${item.q}</p>
+            <p class="text-[11px] text-slate-400 italic">${item.note}</p>
           </div>
-          <div class="bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-700 self-stretch sm:self-auto text-left sm:text-right shrink-0">
-            <span class="text-[9px] uppercase font-bold text-slate-400 block">Answer</span>
-            <span class="text-xs sm:text-sm font-bold text-emerald-400">${item.a}</span>
+          <div class="bg-slate-950 px-3.5 py-2 rounded-xl border border-slate-800 self-stretch sm:self-auto text-left sm:text-right shrink-0">
+            <span class="text-[9px] uppercase tracking-wider font-black text-slate-500 block">Verified Answer</span>
+            <span class="text-xs sm:text-sm font-black text-emerald-400">${item.a}</span>
           </div>
         `;
         container.appendChild(card);
@@ -577,6 +778,9 @@
     }
 
     document.getElementById('searchInput').addEventListener('input', renderBrowseList);
+
+    // Initial Startup
+    updateMasteredUI();
     updateFlashcard();
   </script>
 </body>
